@@ -1,0 +1,6 @@
+miniprogram/node_modules
+miniprogram/miniprogram_npm
+cloudfunctions/getAuth/node_modules
+cloudfunctions/getAuth/miniprogram_npm
+cloudfunctions/image2Text/node_modules
+cloudfunctions/image2Text/miniprogram_npm

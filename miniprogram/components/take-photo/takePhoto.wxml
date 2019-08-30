@@ -1,0 +1,21 @@
+<view class="takephoto">
+  <camera class="camera" flash="{{flash}}">
+   <cover-view class="coverWrapper">
+      <cover-view class="coverTop"></cover-view>
+      <cover-view class="coverBottom">
+         <cover-view bindtap="chooseImage" class="coverBtn">
+           <cover-image src="../../assets/image/photo.png"></cover-image>
+         </cover-view>
+
+         <cover-view bindtap="takePhoto" class="coverBtn">
+           <cover-view class="take"></cover-view>
+         </cover-view>
+
+         <cover-view bindtap="handerflash" class="coverBtn">
+            <cover-image wx:if="{{ flash }}" src="../../assets/image/flash_on.png" />
+            <cover-image wx:if="{{ !flash }}" src="../../assets/image/flash_off.png" />
+         </cover-view>
+      </cover-view>
+   </cover-view>
+  </camera>
+</view>

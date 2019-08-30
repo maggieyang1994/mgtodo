@@ -1,0 +1,7 @@
+<!--components/audio.wxml-->
+
+<view>
+  <image src="../../assets/image/voice.png" class="photoImage" 
+  alt='语音添加' bindtouchstart="touchstart" bindtouchend="touchend"/>
+
+</view>

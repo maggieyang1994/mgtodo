@@ -1,0 +1,33 @@
+.takephoto{
+  width: 100%;
+  height: 100%;
+  background-color:black
+}
+.camera{
+  height: 100%
+}
+.coverWrapper{
+  display:flex;
+  flex-direction: column;
+  height: 100%;
+}
+.coverTop{
+  flex-grow: 1
+}
+.coverBottom{
+  display:flex;
+  flex-direction: row;
+  justify-content: space-around;
+  padding-bottom:1rem
+}
+.coverBtn{
+  width:3rem;
+  height: 3rem
+}
+.take{
+  background-color: white;
+  border-radius: 50%;
+  width:100%;
+  height: 100%;
+}
+

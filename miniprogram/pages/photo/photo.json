@@ -1,0 +1,7 @@
+{
+  "component": true,
+  "usingComponents": {
+    "take-photo": "../../components/take-photo/takePhoto",
+    "edit-photo": "../../components/edit-photo/editPhoto"
+  }
+}

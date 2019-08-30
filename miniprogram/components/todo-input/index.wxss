@@ -1,0 +1,21 @@
+.todo-input-container {
+    padding: .5em;
+    height: 120rpx;
+    display: flex
+}
+
+.todo-input-container input {
+    font-size: 1.7em;
+    height: 120rpx; 
+    flex-grow: 1   
+}
+.takePhoto{
+    width:11%;
+    line-height: 120rpx;
+}
+.takePhoto .photoImage{
+    width: 1.5em;
+    height: 1.5em
+}
+
+@import '../../style/commom';
