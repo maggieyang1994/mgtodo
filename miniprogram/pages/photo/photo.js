@@ -1,24 +1,17 @@
 
-const Store = app.Store
-const dispatch = Store.dispatch
+// const Store = app.Store
+// const dispatch = Store.dispatch
 Page({
   data: {
     sourceImg: null,
     resultImg: null,
-    resultImgSize: null,
-    foo: ''
+    resultImgSize: null
   },
   onLoad () {
-    const updateDate = () => {
-      const foo = Store.getState().myText
-      this.setData({ foo })
-    }
-
-    updateDate();
-    this.unsubStore = Store.subscribe(() => updateDate())
+    
   },
   onUnload() {
-    this.unsubStore()
+   
   },
   handlerTakePhoto(e) {
     this.setData({

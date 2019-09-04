@@ -23,14 +23,18 @@ Component({
         onConfirm: function () {
             this.triggerEvent('confirm')
         },
-        takePhoto: function(){
-            this.triggerEvent('takephoto')
+        takePhoto: function () {
+            wx.navigateTo({
+                url: '/pages/photo/photo'
+            })
         },
-        takeAudio: function(){
-            this.triggerEvent('takeaudio')
+        takeAudio: function () {
+            wx.navigateTo({
+                url: '/pages/audio/audio'
+            })
         },
-        image2Text(){
-            
+        image2Text() {
+
         }
     }
 });

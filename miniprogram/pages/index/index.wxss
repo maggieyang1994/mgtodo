@@ -5,19 +5,5 @@
 .todo-input {
   width: 100%;
 }
-.popup{
-  width: 300rpx;
-height: 300rpx;
-position: absolute;
-left: 50%;
-top: 50%;
-margin-left: -150rpx;
-margin-top: -150rpx;
-background-color: #ccc;
-text-align: center;
-vertical-align: center;
-vertical-align: middle;
-line-height: 300rpx;
 
-}
 @import "../../style/commom";

@@ -70,5 +70,8 @@
     }
     return output;
   });
+   module.exports = {
+     ...object
+   }
 
 } ());

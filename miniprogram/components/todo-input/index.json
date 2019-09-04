@@ -1,7 +1,6 @@
 {
     "component": true,
     "usingComponents": {
-      "van-field": "vant-weapp/field/index",
-      "audio": "../audio/audio"
+      "van-field": "vant-weapp/field/index"
     }
 }

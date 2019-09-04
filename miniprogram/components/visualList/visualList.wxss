@@ -1,0 +1,15 @@
+/* components/visualList/visualList.wxss */
+.visualWrapper{
+  position:relative;
+  border: 1px solid black;
+  overflow-y:scroll
+}
+.viewContent{
+  position: absolute;
+  top:0; right:0; left: 0
+}
+.visualDom{
+  position:absolute; 
+  /* left: -99999px; */
+}
+@import "../../style/commom";

@@ -4,9 +4,11 @@ import QuickTodo from '../../models/QuickTodo'
 import BaseTodo from '../../models/BaseTodo'
 import User from '../../models/User'
 import regeneratorRuntime from '../../utils/runtime'
-const Store = app.Store
-const dispatch = Store.dispatch
-
+// import app from '../../app'
+// const Store = app.Store
+// const dispatch = Store.dispatch
+// const app = getApp();
+// let subscribeId;
 const getDefaultTodo = () => ({
   title: '',
   expireAt: null,
@@ -21,18 +23,35 @@ const indexPageData = {
   todoList: [],
   currentUser: {},
   userList: [],
-  createTodo: getDefaultTodo()
+  createTodo: getDefaultTodo(),
+  showAudio: false
 }
 
 Page({
   data: indexPageData,
-
-  async onLoad() {
+  async onLoad(options) {
+    var self = this;
     console.log('Start inital ...')
     const result = await this.inital()
-    console.log(`Inital ${result ? 'done' : 'fail'}`)
+    console.log(`Inital ${result ? 'done' : 'fail'}`);
+    if(options.data){
+      this.onCreateTodo(JSON.parse(options.data))
+    }
+    // const eventChannel = this.getOpenerEventChannel();
+    // console.log(eventChannel)
+    // eventChannel.on('onCreateTodo', function(data) {
+    //   console.log("from audio", data)
+    // })
+    // subscribeId = app.store.subscribe(function () {
+    //   let data = app.store.getState().showAudio
+    //   self.setData({
+    //     showAudio: data.showAudio
+    //   })
+    // })
   },
-
+  onunload() {
+    // subscribeId()
+  },
   async onPullDownRefresh() {
     console.log('Down refresh.')
     await this.networkInital();
@@ -124,7 +143,7 @@ Page({
   async initalTodolist() {
     const res = await adapter.getTodoList()
     const { users, list } = res.result
-    this.data.userList = users.length ? users.map(x => new User(x)): [this.data.currentUser]
+    this.data.userList = users.length ? users.map(x => new User(x)) : [this.data.currentUser]
     console.log('Todolist:', res.result)
     this.data.todoList = this.sortTodoList(list).map(x => new BaseTodo(x))
   },
@@ -134,7 +153,7 @@ Page({
   },
 
   // 更新 data 并按照修改时间排序
-  updateData(sort=true) {
+  updateData(sort = true) {
     const todoList = sort ? this.sortTodoList(this.data.todoList) : null
     this.setData({
       ...this.data,
@@ -163,8 +182,8 @@ Page({
   },
 
   // 创建 Todo
-  onCreateTodo() {
-    const todo = this.data.createTodo
+  onCreateTodo(data) {
+    const todo = data || this.data.createTodo
     // todo.creator = this.data.user
 
     const quickTodo = new QuickTodo(QuickTodo.mapping(todo))
@@ -305,16 +324,11 @@ Page({
         this.updateData()
       })
   },
-  takephoto(){
+  takephoto() {
     // 拍照上传
-    setTimeout(() => {
-      dispatch(changeText('new text'))
-    }, 2000)
-    wx.navigateTo({
-      url: '/pages/photo/photo'
-    })
+
   },
-  takeAudio(){
+  takeAudio() {
     // 录音上传
   }
 })

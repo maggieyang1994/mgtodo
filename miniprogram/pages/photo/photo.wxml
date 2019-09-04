@@ -1,8 +1,10 @@
 <view class="cameraWrapper">
-  <!-- <take-photo bindtakePhoto = "handlerTakePhoto" wx:if="{{!sourceImg && !resultImg}}"></take-photo>
-  <edit-photo sourceImg="{{sourceImg}}" wx:if="{{sourceImg && !resultImg}}" bindeditPhoto="handerEditPhoto"> </edit-photo> -->
-  {{foo}}
-  <!-- <image src="{{resultImg}}"  wx:if="{{resultImg}}" style="width: {{resultImgSize.width}}px; height: {{resultImgSize.height}}px"/> -->
+   <take-photo bindtakePhoto = "handlerTakePhoto" wx:if="{{!sourceImg && !resultImg}}"></take-photo>
+  <edit-photo sourceImg="{{sourceImg}}" wx:if="{{sourceImg && !resultImg}}" bindeditPhoto="handerEditPhoto"> </edit-photo> 
+
+   <image src="{{resultImg}}"  wx:if="{{resultImg}}" style="width: {{resultImgSize.width}}px; height: {{resultImgSize.height}}px"/> 
   
   <!-- <imageTranlator wx:if="{{resultImg}}" image = "{{resultImg}}"/> -->
+  
+  <van-loading color="#fff" />
 </view>

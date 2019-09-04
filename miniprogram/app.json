@@ -2,7 +2,8 @@
   "pages": [
     "pages/index/index",
     "pages/welcome/index",
-    "pages/photo/photo"
+    "pages/photo/photo",
+    "pages/audio/audio"
   ],
   "window": {
     "backgroundTextStyle": "dark",

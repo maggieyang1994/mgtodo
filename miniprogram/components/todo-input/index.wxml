@@ -1,7 +1,7 @@
 <view class="todo-input-container border-botton border-color">
   <input wx:if="{{ value }}" placeholder="添加一条待办" value="{{ value.title }}" bindinput="onTitleChange" bind:confirm="onConfirm" />
-  <view class="takePhoto">
-    <audio/>
+  <view class="takePhoto" bindtap="takeAudio">
+   <image src="../../assets/image/voice.png" class="photoImage" alt='语音添加' />
   </view>
   <view class="takePhoto" bindtap="takePhoto">
     <image src="../../assets/image/takePhoto.png" class="photoImage" alt='拍照添加' />

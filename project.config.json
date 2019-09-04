@@ -2,8 +2,9 @@
 	"miniprogramRoot": "miniprogram/",
 	"cloudfunctionRoot": "cloudfunctions/",
 	"setting": {
-		"urlCheck": true,
+		"urlCheck": false,
 		"es6": true,
+		"enhance": true,
 		"postcss": true,
 		"minified": true,
 		"newFeature": true,
@@ -16,17 +17,16 @@
 			"ignore": [],
 			"disablePlugins": [],
 			"outputPath": ""
-		},
-		"enhance": true
+		}
 	},
 	"appid": "wxe19370fd469e0d7a",
 	"projectname": "sptodo",
-	"libVersion": "2.2.5",
+	"libVersion": "2.7.3",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {
 		"qywx_simulator_plugin": "1.2.0"
 	},
-	"compileType": "plugin",
+	"compileType": "miniprogram",
 	"cloudfunctionTemplateRoot": "cloudfunctionTemplate",
 	"condition": {}
 }

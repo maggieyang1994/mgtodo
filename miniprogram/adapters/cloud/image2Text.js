@@ -1,8 +1,8 @@
 
-const image2Text  = (headers, imageData) => {
+const image2Text  = (auth, imageData) => {
   return wx.cloud.callFunction({
       name: 'image2Text',
-      data: { headers, imageData }
+      data: { auth, imageData }
   })
   .then(res => {
     console.log(res)

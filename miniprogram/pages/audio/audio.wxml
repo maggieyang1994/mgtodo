@@ -1,0 +1,23 @@
+<!-- miniprogram/pages/audio/audio.wxml -->
+<view class="takeAudioWrapper">
+  <view class="takeAudio">
+    <view class="pressTalk" bindtouchstart="touchstart" bindtouchend="touchend">
+      <image src="../../assets/image/voice.png" class="photoImage" alt='语音添加' />
+      <view>语音添加</view>
+    </view>
+    <view class="pressTalk" bindtap="playAudio" wx:if="{{canPlayAudio}}">
+      <image src="../../assets/image/play.png" class="photoImage" />
+      <view>播放录音</view>
+    </view>
+  </view>
+  <view class="textBox">
+  {{translatedText}}
+  </view>
+  <view class="bottom" wx:if="{{translatedText.length}}">
+    <button bindtap="addTodo">添加到todo</button>
+     <button bindtap="cancelTodo">取消</button>
+  </view>
+  <view class="popup" wx:if="{{isPress}}">
+    <image src="../../assets/image/voice.png" style="width:100rpx;height:100rpx" />
+  </view>
+</view>

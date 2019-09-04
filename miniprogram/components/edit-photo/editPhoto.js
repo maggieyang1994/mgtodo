@@ -24,7 +24,7 @@ Component({
     movablePosotion: null,
     showCut: false,
     resultImg: null,
-    showLoading:false
+    showLoading: false
   },
 
   /**
@@ -154,7 +154,7 @@ Component({
               canvasId: 'canvas1',
               success(res) {
                 self.setData({
-                  resultImg: res.tempFilePath, 
+                  resultImg: res.tempFilePath,
                   showCut: false
                 })
               },
@@ -166,21 +166,51 @@ Component({
         }
       })
     },
-    async image2Text(){
+    async image2Text() {
       // this.setData({
       //   showLoading:
       // })
       let image = this.data.resultImg || this.data.sourceImg
       let imageData = wx.getFileSystemManager().readFileSync(image, 'base64');
-      wx.cloud.callFunction({
-        name: "getAuth"
-      }).then(res => {
-        // this.trigger
+      let auth = await this.getAuth();
+      adapter.image2Text(auth, imageData).then(res => {
         console.log(res)
-      }).catch(err => {
-        console.log(err)
+      }).catch(e => {
+        console.log(e)
       })
-      
+
+
+    },
+    async getAuth() {
+      try {
+        let curTime = Date.parse(new Date())
+        let auth = wx.getStorageSync('auth');
+        auth = auth && JSON.parse(auth)
+        return new Promise((resolve, reject) => {
+          if (!auth || (auth && curTime - auth.firstGetTime >= auth.expires)) {
+            //  过期 重新鉴权
+            wx.cloud.callFunction({
+              name: 'getAuth'
+            }).then(res => {
+              console.log(res)
+              wx.setStorageSync('auth', JSON.stringify({
+                expires: res.result.result.expires_in,
+                access_token: res.result.result.access_token,
+                firstGetTime: Date.parse(new Date())
+              }));
+              resolve(res.result.result.access_token)
+            })
+          } else {
+            resolve(auth.access_token)
+          }
+        })
+      } catch (e) {
+        wx.showToast({
+          title: '鉴权失败'
+
+        })
+      }
+
     }
   }
 

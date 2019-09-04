@@ -1,4 +1,4 @@
-const btoa = require("../lib/base64.js")
+const {btoa} = require("../lib/base64.js")
 export default (buffer) => {
   var binary = '';
   var bytes = new Uint8Array(buffer);

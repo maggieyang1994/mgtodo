@@ -2,6 +2,7 @@
   "component": true,
   "usingComponents": {
     "take-photo": "../../components/take-photo/takePhoto",
-    "edit-photo": "../../components/edit-photo/editPhoto"
+    "edit-photo": "../../components/edit-photo/editPhoto",
+    "van-loading": "vant-weapp/loading/index"
   }
 }

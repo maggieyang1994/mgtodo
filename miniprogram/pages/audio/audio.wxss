@@ -1,0 +1,48 @@
+/* miniprogram/pages/audio/audio.wxss *//* components/audio.wxss */
+.takeAudio{
+  display: flex
+}
+.takeAudio .photoImage{
+  width: 1.5em;
+  height: 1.5em
+}
+
+.pressTalk{
+  width: 29%;
+  padding: 13rpx;
+  border: 1px solid black;
+  border-radius: 12%;
+  display: flex;
+  margin-left: 50rpx;
+
+}
+.textBox{
+  width: 100%
+}
+
+
+.popup{
+  width: 300rpx;
+height: 300rpx;
+position: absolute;
+left: 50%;
+top: 50%;
+margin-left: -150rpx;
+margin-top: -150rpx;
+background-color: #ccc;
+text-align: center;
+vertical-align: center;
+vertical-align: middle;
+line-height: 300rpx;
+
+}
+.bottom{
+  position: fixed;
+  bottom:0;
+  left: 50%;
+  transform: translatex(-50%);
+  
+}
+.bottom button{
+ padding-top:10rpx;
+}
