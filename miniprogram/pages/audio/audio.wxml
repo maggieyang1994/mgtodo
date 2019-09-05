@@ -13,10 +13,11 @@
   <view class="textBox">
   {{translatedText}}
   </view>
-  <view class="bottom" wx:if="{{translatedText.length}}">
+  <!-- <view class="bottom" wx:if="{{translatedText.length}}">
     <button bindtap="addTodo">添加到todo</button>
      <button bindtap="cancelTodo">取消</button>
-  </view>
+  </view> -->
+  <bottomAddtodo isShow="{{translatedText.length}}" bindaddTodo="addTodo" bindcancelTodo="cancelTodo"/>
   <view class="popup" wx:if="{{isPress}}">
     <image src="../../assets/image/voice.png" style="width:100rpx;height:100rpx" />
   </view>

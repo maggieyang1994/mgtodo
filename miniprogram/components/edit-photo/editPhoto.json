@@ -2,6 +2,8 @@
   "component": true,
   "usingComponents": {
     "van-button": "vant-weapp/button/index",
-    "van-loading": "vant-weapp/loading/index"
+    "van-loading": "vant-weapp/loading/index",
+    "bottomAddtodo": "../../components/bottomAddtodo/bottomAddtodo"
+
   }
 }

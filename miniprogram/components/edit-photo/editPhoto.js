@@ -167,19 +167,32 @@ Component({
       })
     },
     async image2Text() {
-      // this.setData({
-      //   showLoading:
-      // })
+      if(this.data.movablePosotion.width <= 15 || this.data.movablePosotion.height <= 15){
+        //baidu api 最短边至少15px
+        wx.showToast({
+          title: "图片最短边应大于15px"
+        });
+        return false;
+      }
+      this.setData({
+        showLoading: true
+      })
       let image = this.data.resultImg || this.data.sourceImg
       let imageData = wx.getFileSystemManager().readFileSync(image, 'base64');
       let auth = await this.getAuth();
       adapter.image2Text(auth, imageData).then(res => {
-        console.log(res)
+        this.setData({
+          translatedText:  res.result.words_result.map(x =>x.words).join("\r\n")
+        });
       }).catch(e => {
-        console.log(e)
+       wx.showToast({
+          title: e.msg
+        })
+      }).finally(() => {
+        this.setData({
+          showLoading: false
+        })
       })
-
-
     },
     async getAuth() {
       try {
@@ -187,7 +200,7 @@ Component({
         let auth = wx.getStorageSync('auth');
         auth = auth && JSON.parse(auth)
         return new Promise((resolve, reject) => {
-          if (!auth || (auth && curTime - auth.firstGetTime >= auth.expires)) {
+          if (!auth || (auth && curTime - auth.firstGetTime >= auth.expires *1000)) {
             //  过期 重新鉴权
             wx.cloud.callFunction({
               name: 'getAuth'
@@ -199,7 +212,7 @@ Component({
                 firstGetTime: Date.parse(new Date())
               }));
               resolve(res.result.result.access_token)
-            })
+            }).catch(e => new Error(e))
           } else {
             resolve(auth.access_token)
           }
@@ -211,6 +224,24 @@ Component({
         })
       }
 
+    },
+    cancelTodo() {
+      wx.navigateTo({ url: "/pages/index/index" })
+    },
+    addTodo(){
+      let todoObj = {
+        title: this.data.translatedText || 'rinima',
+        expireAt: null,
+        content: '',
+        isComplete: false
+      };
+      wx.navigateTo({
+        url: "/pages/index/index?data="+JSON.stringify(todoObj),
+        // success: function (res) {
+        //   // 通过eventChannel向被打开页面传送数据
+        //   res.eventChannel.emit('onCreateTodo', { data: todoObj })
+        // }
+      })
     }
   }
 

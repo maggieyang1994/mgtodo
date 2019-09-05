@@ -36,7 +36,7 @@ vertical-align: middle;
 line-height: 300rpx;
 
 }
-.bottom{
+/* .bottom{
   position: fixed;
   bottom:0;
   left: 50%;
@@ -45,4 +45,4 @@ line-height: 300rpx;
 }
 .bottom button{
  padding-top:10rpx;
-}
+} */

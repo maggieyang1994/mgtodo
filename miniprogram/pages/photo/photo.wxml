@@ -5,6 +5,4 @@
    <image src="{{resultImg}}"  wx:if="{{resultImg}}" style="width: {{resultImgSize.width}}px; height: {{resultImgSize.height}}px"/> 
   
   <!-- <imageTranlator wx:if="{{resultImg}}" image = "{{resultImg}}"/> -->
-  
-  <van-loading color="#fff" />
 </view>

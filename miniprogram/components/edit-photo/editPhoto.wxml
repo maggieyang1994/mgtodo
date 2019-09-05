@@ -1,20 +1,19 @@
 <!-- components/editPhoto/editPhoto.wxml -->
 <view class="EditPhoto">
   <view class="cutting">
-    <van-button type="default"  bindtap="cut"  wx:if="{{!showCut}}">裁剪</van-button>
-    <van-button type="default"  bindtap="handleCut" wx:if="{{showCut}}">确认裁剪</van-button>
-    <van-button type="default"  bindtap="cancelCut" wx:if="{{showCut}}">取消裁剪</van-button>
+    <van-button type="default" bindtap="cut" wx:if="{{!showCut}}">裁剪</van-button>
+    <van-button type="default" bindtap="handleCut" wx:if="{{showCut}}">确认裁剪</van-button>
+    <van-button type="default" bindtap="cancelCut" wx:if="{{showCut}}">取消裁剪</van-button>
     <van-button bindtap="image2Text" wx:if="{{!showCut}}">识别图中文字</van-button>
   </view>
   <view class="imageWrapper">
     <movable-area style="width: {{outview. width}}px; height: {{outview.height}}px" class="movableArea">
       <image src="{{resultImg || sourceImg}}" class="fullWidth fullHeight" bindload="imageOnload"></image>
-     
       <!-- <view>x: {{movablePosotion.left - temp[1]}}</view>
       <view>y: {{movablePosotion.top - temp[0]}}</view>
       <view>width:{{movablePosotion.width + temp[1] - temp[3]}}</view>
       <view>height:{{movablePosotion.height + temp[0] - temp[2]}}</view> -->
-      <movable-view class="movable fullWidth fullHeight" animation ='{{false}}' direction="all" wx:if="{{showCut}}" x="{{movablePosotion.left - temp[1]}}" y="{{movablePosotion.top - temp[0]}}"  style=" height:{{movablePosotion.height + temp[0] - temp[2]}}px;width:{{movablePosotion.width + temp[1] - temp[3]}}px" bindchange="onChange">
+      <movable-view class="movable fullWidth fullHeight" animation='{{false}}' direction="all" wx:if="{{showCut}}" x="{{movablePosotion.left - temp[1]}}" y="{{movablePosotion.top - temp[0]}}" style=" height:{{movablePosotion.height + temp[0] - temp[2]}}px;width:{{movablePosotion.width + temp[1] - temp[3]}}px" bindchange="onChange">
         <!-- style="top:{{movablePosotion.top}}rpx; left: {{movablePosotion.left}}rpx; height:{{movablePosotion.height}}rpx;width:{{movablePosotion.width}}rpx" -->
         <view class="point-line pl-left top br-top " data-type="top" catchtouchstart="dragStart" catchtouchmove="dragMove" catchtouchend="dragEnd" />
         <view class="point-line pl-top right br-right" data-type="right" catchtouchstart="dragStart" catchtouchmove="dragMove" catchtouchend="dragEnd" />
@@ -25,13 +24,18 @@
         <view class="point-line br-bottom br-left bottom left" data-type="bottom,left" catchtouchstart="dragStart" catchtouchmove="dragMove" catchtouchend="dragEnd" />
         <view class="point-line br-bottom br-right bottom right" data-type="bottom,right" catchtouchstart="dragStart" catchtouchmove="dragMove" catchtouchend="dragEnd" />
       </movable-view>
-      <!--  看文档不仔细 -->
+      <!-- 看文档不仔细 -->
       <!-- <canvas id="canvas1"  style="width: {{movablePosotion.width}}px; height: {{movablePosotion.height}}px;border:1px solid red" wx:if="{{imageLoaded}}"></canvas> -->
-     <canvas canvas-id="canvas1"  style="width: {{movablePosotion.width/scale}}px; height: {{movablePosotion.height/scale}}px;position:absolute;top:0;left:-999999px"></canvas>
+      <canvas canvas-id="canvas1" style="width: {{movablePosotion.width/scale}}px; height: {{movablePosotion.height/scale}}px;position:absolute;top:0;left:-999999px"></canvas>
     </movable-area>
-   <view class="loading" wx:if="{{showLoading}}">
-    <van-loading type="spinner" color="#fff" />
-   </view>
-     
+  </view>
+  <view class="textWrapprer">
+    <view class="translatedText" wx:if="{{translatedText.length}}">
+     <text class="text">{{translatedText}}</text>
+    </view>
+    <bottomAddtodo isShow="{{translatedText.length}}" bindaddTodo="addTodo" bindcancelTodo="cancelTodo" class="bottomAddtodo"/>
+  </view>
+  <view class="loading" wx:if="{{showLoading}}">
+    <van-loading type="spinner" color="#fff" class="spinner" />
   </view>
 </view>

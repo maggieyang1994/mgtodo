@@ -1,0 +1,5 @@
+<!--components/bottomAddtodo/bottomAddtodo.wxml-->
+ <view class="bottom" wx:if="{{isShow}}">
+    <button bindtap="addTodo">添加到todo</button>
+     <button bindtap="cancelTodo">取消</button>
+  </view>

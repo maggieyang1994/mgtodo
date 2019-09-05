@@ -1,0 +1,11 @@
+/* components/bottomAddtodo/bottomAddtodo.wxss */
+.bottom{
+  width: 100%;
+display: flex;
+justify-content: center;
+
+  
+}
+.bottom button{
+ margin-top:10rpx;
+}
