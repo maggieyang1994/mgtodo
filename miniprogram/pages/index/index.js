@@ -183,7 +183,7 @@ Page({
 
   // 创建 Todo
   onCreateTodo(data) {
-    const todo = data || this.data.createTodo
+    const todo = data.title ? data : this.data.createTodo
     // todo.creator = this.data.user
 
     const quickTodo = new QuickTodo(QuickTodo.mapping(todo))

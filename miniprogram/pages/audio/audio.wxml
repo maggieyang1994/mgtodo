@@ -10,9 +10,9 @@
       <view>播放录音</view>
     </view>
   </view>
-  <view class="textBox">
-  {{translatedText}}
-  </view>
+  <view class="translatedText" wx:if="{{translatedText.length}}">
+     <text class="text">{{translatedText}}</text>
+    </view>
   <!-- <view class="bottom" wx:if="{{translatedText.length}}">
     <button bindtap="addTodo">添加到todo</button>
      <button bindtap="cancelTodo">取消</button>

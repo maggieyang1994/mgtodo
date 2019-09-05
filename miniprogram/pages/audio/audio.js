@@ -86,8 +86,10 @@ recordManager.onStop(
       isRecording: false,
       isLastStoped: true,
       canPlayAudio: true,
-      audioPath: res.tempFilePath
+      audioPath: res.tempFilePath,
+      translatedText: 'rinima'
     });
+    
 
   })
 
@@ -101,8 +103,18 @@ recordManager.onFrameRecorded(function (res) {
     isFirst = false
   } else status = isLastFrame ? 2 : 1;
   console.log(frameBuffer, isLastFrame);
+  wx.cloud.callFunction({
+    name: 'mp3towav',
+    data: {
+      buffer: frameBuffer
+    }
+  }).then(res => {
+    console.log(res)
+  }).catch(e => {
+    console.log(e)
+  })
   // 如何确认 sendData的时候已经链接成功
-  sendData(frameBuffer, status)
+  // sendData(frameBuffer, status)
 })
 Page({
 
