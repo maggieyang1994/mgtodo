@@ -7,12 +7,23 @@ cloud.init({
 });
 const axios = require('axios')
 
+const apiConfig = {
+  image: {
+    client_id: "oAuOqOhDyqiiSwTc4XiY0ZhI",
+    client_secret: "A8IvA6KhI2he9GuG8wxfvgRmFZL33UZq"
+  },
+  voice: {
+    client_id : '8s0sxvRAPQYhravbOXZ6G4sG',
+    client_secret: 'yx2Rpaf4fbMtuk7rpAVAPcHnDXv1p9Id'
+  }
+}
 // 云函数入口函数
 exports.main = async (event, context) => {
-  let url = "https://aip.baidubce.com/oauth/2.0/token";
+  console.log(event)
+  let url = event.url
   let grant_type = "client_credentials";
-  let client_id = "oAuOqOhDyqiiSwTc4XiY0ZhI";
-  let client_secret = "A8IvA6KhI2he9GuG8wxfvgRmFZL33UZq";
+  let client_id = apiConfig[event.type].client_id;
+  let client_secret = apiConfig[event.type].client_secret;
   let res = await axios.get(url, {
     params: {
       grant_type,

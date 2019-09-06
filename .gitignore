@@ -4,5 +4,5 @@ cloudfunctions/getAuth/node_modules
 cloudfunctions/getAuth/miniprogram_npm
 cloudfunctions/image2Text/node_modules
 cloudfunctions/image2Text/miniprogram_npm
-cloudfunctions/mp3towav/miniprogram_npm
-cloudfunctions/mp3towav/node_modules
+cloudfunctions/voice2Text/miniprogram_npm
+cloudfunctions/voice2Text/node_modules

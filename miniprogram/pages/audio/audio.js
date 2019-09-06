@@ -1,38 +1,12 @@
 // miniprogram/pages/audio/audio.js
 // const app = getApp()
-import { getVoice2TextUrl } from "../../utils/getVoice2TextUrl"
-import Notify from 'vant-weapp/notify/notify'
-// import { showAudio } from '../../store/action.js'
-import ArrayBufferToBase64 from '../../utils/arrayBufferToBase64'
-// import QuickTodo from '../../models/quickTodo'
+import { getBaiduAuth } from '../../utils/getBaiduAuth.js'
 var self;
 let appId = '5d5caf64';
-let isFirst = true
 let recordManager = wx.getRecorderManager();
-let socketManager;
-let audioManager = wx.createInnerAudioContext()
-const sendData = (audioData, status) => {
-  // console.log(ArrayBufferToBase64(audioData))
-  var params = {
-    'common': {
-      'app_id': appId
-    },
-    'business': {
-      'language': 'zh_cn', //小语种可在控制台--语音听写（流式）--方言/语种处添加试用
-      'domain': 'iat',
-      'accent': 'mandarin', //中文方言可在控制台--语音听写（流式）--方言/语种处添加试用
-    },
-    'data': {
-      'status': status,
-      'format': 'audio/L16;rate=16000',
-      'encoding': 'raw',
-      'audio': wx.arrayBufferToBase64(audioData)
-    }
-  }
-  socketManager.send({
-    data: JSON.stringify(params)
-  })
-}
+let audioManager = wx.createInnerAudioContext();
+let fileManager = wx.getFileSystemManager()
+
 recordManager.onStart(function () {
   console.log('start recording')
   // app.store.dispatch(showAudio(true));
@@ -41,44 +15,8 @@ recordManager.onStart(function () {
     isRecording: true
   })
   if (!self.data.isLastStoped) self.touchend()
-
-
-  // 开启websocket
-  let url = getVoice2TextUrl();
-  console.log(url);
-  socketManager = wx.connectSocket({ url });
-  socketManager.onError(function () {
-    console.log('onError')
-  })
-  socketManager.onClose(function () {
-    console.log('onClose')
-  })
-  socketManager.onOpen(function () {
-    console.log('onOpen')
-  })
-  socketManager.onMessage(function (res) {
-    console.log('onMessage', res.data);
-    // let result = JSON.parse(res);
-    // console.log(result)
-    // if(result.data.status === 2){
-    //   // 识别结束
-    //   let word
-    // }
-    // if (res) {
-    //   let result = JSON.parse(res);
-    //   let words = result.data.result.ws[0].cw.map(x => x.w).join("");
-    //   console.log(words)
-    //   this.setData({
-    //     translatedText: 'rinimaei'
-    //   })
-    // }
-    console.log(res)
-
-  })
-
 })
 recordManager.onStop(
-
   function (res) {
     console.log('end recording')
     // app.store.dispatch(showAudio(false));
@@ -89,33 +27,30 @@ recordManager.onStop(
       audioPath: res.tempFilePath,
       translatedText: 'rinima'
     });
-    
-
+    // getBaiduAuth('http://openapi.baidu.com/oauth/2.0/token', 'voice2TextToken', 'voice').then(auth => {
+    //   console.log(auth);
+    //   let base64 = fileManager.readFileSync(res.tempFilePath, 'base64');
+    //   console.log(base64);
+    //   wx.cloud.callFunction({
+    //     name: 'voice2Text',
+    //     data: {
+    //       fileContent: base64,
+    //       auth,
+    //       fileSize: res.fileSize
+    //     }
+    //   })
+    // })
+    let base64 = fileManager.readFileSync(res.tempFilePath, 'base64');
+    console.log(base64);
+    wx.cloud.callFunction({
+      name: 'voice2Text',
+      data: {
+        fileContent: base64,
+        auth: JSON.parse('{"expires":2592000,"access_token":"24.cbff936cf75d454cad4f992f24c7bca6.2592000.1570346128.282335-17049972","firstGetTime":1567754141000,"scope":"audio_voice_assistant_get brain_enhanced_asr audio_tts_post public brain_ocr_general_basic brain_ocr_webimage brain_all_scope picchain_test_picchain_api_scope wise_adapt lebo_resource_base lightservice_public hetu_basic lightcms_map_poi kaidian_kaidian ApsMisTest_Test权限 vis-classify_flower lpq_开放 cop_helloScope ApsMis_fangdi_permission smartapp_snsapi_base iop_autocar oauth_tp_app smartapp_smart_game_openapi oauth_sessionkey smartapp_swanid_verify smartapp_opensource_openapi smartapp_opensource_recapi fake_face_detect_开放Scope"}'),
+        fileSize: res.fileSize
+      }
+    })
   })
-
-// 监听已经录制完的制定帧的大小
-recordManager.onFrameRecorded(function (res) {
-  let { frameBuffer, isLastFrame } = res;
-
-  let status;
-  if (isFirst) {
-    status = 0;
-    isFirst = false
-  } else status = isLastFrame ? 2 : 1;
-  console.log(frameBuffer, isLastFrame);
-  wx.cloud.callFunction({
-    name: 'mp3towav',
-    data: {
-      buffer: frameBuffer
-    }
-  }).then(res => {
-    console.log(res)
-  }).catch(e => {
-    console.log(e)
-  })
-  // 如何确认 sendData的时候已经链接成功
-  // sendData(frameBuffer, status)
-})
 Page({
 
   data: {
@@ -136,8 +71,9 @@ Page({
       isPress: true
     })
     recordManager.start({
-      frameSize: 4,
-      format: 'mp3'
+      format: 'aac',
+      sampleRate: 16000,
+      numberOfChannels: 1
     })
   },
   touchend() {
@@ -160,14 +96,10 @@ Page({
       content: '',
       isComplete: false
     };
-  wx.navigateTo({
-      url: "/pages/index/index?data="+JSON.stringify(todoObj),
-      // success: function (res) {
-      //   // 通过eventChannel向被打开页面传送数据
-      //   res.eventChannel.emit('onCreateTodo', { data: todoObj })
-      // }
+    wx.navigateTo({
+      url: "/pages/index/index?data=" + JSON.stringify(todoObj),
     })
-   
+
   },
   cancelTodo() {
     wx.navigateTo({ url: "/pages/index/index" })

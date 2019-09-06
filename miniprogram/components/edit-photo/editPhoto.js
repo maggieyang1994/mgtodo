@@ -1,6 +1,7 @@
 // components/editPhoto/editPhoto.js
 import { adapterImage } from '../../utils/adaptiveImage.js';
 import adapter from '../../adapters/index'
+import {getBaiduAuth} from '../../utils/getBaiduAuth.js'
 Component({
   /**
    * 组件的属性列表
@@ -179,51 +180,24 @@ Component({
       })
       let image = this.data.resultImg || this.data.sourceImg
       let imageData = wx.getFileSystemManager().readFileSync(image, 'base64');
-      let auth = await this.getAuth();
+      let auth = await getBaiduAuth("https://aip.baidubce.com/oauth/2.0/token", 'image2TextToken', 'image');
       adapter.image2Text(auth, imageData).then(res => {
-        this.setData({
-          translatedText:  res.result.words_result.map(x =>x.words).join("\r\n")
-        });
+        if( res.result.error_code === 110) wx.showToast({title: res.result.error_msg})
+        else{
+          this.setData({
+            translatedText:  res.result.words_result.map(x =>x.words).join("\r\n")
+          });
+        }
+        
       }).catch(e => {
        wx.showToast({
-          title: e.msg
+          title: e.message
         })
       }).finally(() => {
         this.setData({
           showLoading: false
         })
       })
-    },
-    async getAuth() {
-      try {
-        let curTime = Date.parse(new Date())
-        let auth = wx.getStorageSync('auth');
-        auth = auth && JSON.parse(auth)
-        return new Promise((resolve, reject) => {
-          if (!auth || (auth && curTime - auth.firstGetTime >= auth.expires *1000)) {
-            //  过期 重新鉴权
-            wx.cloud.callFunction({
-              name: 'getAuth'
-            }).then(res => {
-              console.log(res)
-              wx.setStorageSync('auth', JSON.stringify({
-                expires: res.result.result.expires_in,
-                access_token: res.result.result.access_token,
-                firstGetTime: Date.parse(new Date())
-              }));
-              resolve(res.result.result.access_token)
-            }).catch(e => new Error(e))
-          } else {
-            resolve(auth.access_token)
-          }
-        })
-      } catch (e) {
-        wx.showToast({
-          title: '鉴权失败'
-
-        })
-      }
-
     },
     cancelTodo() {
       wx.navigateTo({ url: "/pages/index/index" })
