@@ -1,7 +1,7 @@
 // components/editPhoto/editPhoto.js
 import { adapterImage } from '../../utils/adaptiveImage.js';
 import adapter from '../../adapters/index'
-import {getBaiduAuth} from '../../utils/getBaiduAuth.js'
+import { getBaiduAuth } from '../../utils/getBaiduAuth.js'
 Component({
   /**
    * 组件的属性列表
@@ -25,7 +25,9 @@ Component({
     movablePosotion: null,
     showCut: false,
     resultImg: null,
-    showLoading: false
+    showLoading: false,
+    popMessage: '',
+    showPop: false
   },
 
   /**
@@ -168,11 +170,11 @@ Component({
       })
     },
     async image2Text() {
-      if(this.data.movablePosotion.width <= 15 || this.data.movablePosotion.height <= 15){
+      if (this.data.movablePosotion.width <= 15 || this.data.movablePosotion.height <= 15) {
         //baidu api 最短边至少15px
-        wx.showToast({
-          title: "图片最短边应大于15px"
-        });
+        this.setData({
+          popMessage: "图片最短边应大于15px"
+        })
         return false;
       }
       this.setData({
@@ -180,19 +182,31 @@ Component({
       })
       let image = this.data.resultImg || this.data.sourceImg
       let imageData = wx.getFileSystemManager().readFileSync(image, 'base64');
-      let auth = await getBaiduAuth("https://aip.baidubce.com/oauth/2.0/token", 'image2TextToken', 'image');
+      let [auth, err] = await getBaiduAuth("https://aip.baidubce.com/oauth/2.0/token", 'image2TextToken', 'image').then(res => {
+        console.log(res);
+        return [res, null]
+      }).catch(e => [null, e]);
+      console.log(auth, err)
+      if (err) {
+        this.setData({
+          showLoading: false,
+          popMessage: err.errMsg,
+          showPop: true
+        })
+        return;
+      }
       adapter.image2Text(auth, imageData).then(res => {
-        if( res.result.error_code === 110) wx.showToast({title: res.result.error_msg})
-        else{
+        // 为什么必须要开通 本地调试才会有效果？？？？？
+        if (res.result.error_code === 110) this.setData({ popMessage: '权限已经过期' ,showPop: true})
+        else {
           this.setData({
-            translatedText:  res.result.words_result.map(x =>x.words).join("\r\n")
+            translatedText: res.result.words_result.map(x => x.words).join("\r\n")
           });
         }
-        
+
       }).catch(e => {
-       wx.showToast({
-          title: e.message
-        })
+
+        this.setData({ popMessage: e.message ,showPop: true})
       }).finally(() => {
         this.setData({
           showLoading: false
@@ -202,7 +216,7 @@ Component({
     cancelTodo() {
       wx.navigateTo({ url: "/pages/index/index" })
     },
-    addTodo(){
+    addTodo() {
       let todoObj = {
         title: this.data.translatedText || 'rinima',
         expireAt: null,
@@ -210,11 +224,16 @@ Component({
         isComplete: false
       };
       wx.navigateTo({
-        url: "/pages/index/index?data="+JSON.stringify(todoObj),
+        url: "/pages/index/index?data=" + JSON.stringify(todoObj),
         // success: function (res) {
         //   // 通过eventChannel向被打开页面传送数据
         //   res.eventChannel.emit('onCreateTodo', { data: todoObj })
         // }
+      })
+    },
+    onClose(){
+      this.setData({
+        showPop: false
       })
     }
   }

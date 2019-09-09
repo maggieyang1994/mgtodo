@@ -17,7 +17,7 @@ recordManager.onStart(function () {
   if (!self.data.isLastStoped) self.touchend()
 })
 recordManager.onStop(
-  function (res) {
+ async  function (res) {
     console.log('end recording')
     // app.store.dispatch(showAudio(false));
     self.setData({
@@ -27,29 +27,29 @@ recordManager.onStop(
       audioPath: res.tempFilePath,
       translatedText: 'rinima'
     });
+ let auth =  await getBaiduAuth('http://openapi.baidu.com/oauth/2.0/token', 'voice2TextToken', 'voice');
+ console.log(auth)
     // getBaiduAuth('http://openapi.baidu.com/oauth/2.0/token', 'voice2TextToken', 'voice').then(auth => {
-    //   console.log(auth);
     //   let base64 = fileManager.readFileSync(res.tempFilePath, 'base64');
-    //   console.log(base64);
-    //   wx.cloud.callFunction({
-    //     name: 'voice2Text',
+    //   wx.request({
+    //     url: 'http://106.53.100.8:3000/voice2Text',
+    //     method: 'POST',
     //     data: {
-    //       fileContent: base64,
+    //       // auth: { token: "24.23d6e40a8e5bdba40a5680da9378c809.2592000.1570592293.282335-17049972" },
     //       auth,
+    //       fileContent: base64,
     //       fileSize: res.fileSize
+
+    //     },
+    //     success: function (res) {
+    //       console.log(res)
+    //     },
+    //     fail: function (err) {
+    //       console.log(err)
     //     }
     //   })
     // })
-    let base64 = fileManager.readFileSync(res.tempFilePath, 'base64');
-    console.log(base64);
-    wx.cloud.callFunction({
-      name: 'voice2Text',
-      data: {
-        fileContent: base64,
-        auth: JSON.parse('{"expires":2592000,"access_token":"24.cbff936cf75d454cad4f992f24c7bca6.2592000.1570346128.282335-17049972","firstGetTime":1567754141000,"scope":"audio_voice_assistant_get brain_enhanced_asr audio_tts_post public brain_ocr_general_basic brain_ocr_webimage brain_all_scope picchain_test_picchain_api_scope wise_adapt lebo_resource_base lightservice_public hetu_basic lightcms_map_poi kaidian_kaidian ApsMisTest_Test权限 vis-classify_flower lpq_开放 cop_helloScope ApsMis_fangdi_permission smartapp_snsapi_base iop_autocar oauth_tp_app smartapp_smart_game_openapi oauth_sessionkey smartapp_swanid_verify smartapp_opensource_openapi smartapp_opensource_recapi fake_face_detect_开放Scope"}'),
-        fileSize: res.fileSize
-      }
-    })
+
   })
 Page({
 

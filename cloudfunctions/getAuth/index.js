@@ -9,8 +9,8 @@ const axios = require('axios')
 
 const apiConfig = {
   image: {
-    client_id: "oAuOqOhDyqiiSwTc4XiY0ZhI",
-    client_secret: "A8IvA6KhI2he9GuG8wxfvgRmFZL33UZq"
+    client_id: "idRmnnAzO16P3KuyhdCdxLLC",
+    client_secret: "TFlcC9ZZtt9gxGNOfFKTcIBszLjK2B4q"
   },
   voice: {
     client_id : '8s0sxvRAPQYhravbOXZ6G4sG',

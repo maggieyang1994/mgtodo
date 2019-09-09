@@ -107,3 +107,7 @@
 .bottomAddtodo{
   width:100%
 }
+
+.vant .van-popup {
+  padding: 20px
+}

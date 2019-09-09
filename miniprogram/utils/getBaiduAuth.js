@@ -1,10 +1,11 @@
-export const  getBaiduAuth = async(url, storageKey, type) => {
-  try {
-    let curTime = Date.parse(new Date())
-    let auth = wx.getStorageSync(storageKey);
-    auth = auth && JSON.parse(auth)
-    return new Promise((resolve, reject) => {
-      if (!auth || (auth && curTime - auth.firstGetTime >= auth.expires *1000)) {
+export const getBaiduAuth = async (url, storageKey, type) => {
+
+  let curTime = Date.parse(new Date())
+  let auth = wx.getStorageSync(storageKey);
+  auth = auth && JSON.parse(auth)
+  return new Promise((resolve, reject) => {
+    try {
+      if (!auth || (auth && curTime - auth.firstGetTime >= auth.expires * 1000)) {
         //  过期 重新鉴权
         wx.cloud.callFunction({
           name: 'getAuth',
@@ -24,19 +25,23 @@ export const  getBaiduAuth = async(url, storageKey, type) => {
             token: res.result.result.access_token,
             scope: res.result.result.scope
           })
-        }).catch(e => new Error(e))
+        }).catch(e => {
+          reject(e)
+        })
       } else {
         resolve({
           token: auth.access_token,
           scope: auth.scope
         })
       }
-    })
-  } catch (e) {
-    wx.showToast({
-      title: '鉴权失败'
+    } catch (e) {
+      reject(e)
+    }
 
-    })
-  }
-
+  })
 }
+
+
+
+
+

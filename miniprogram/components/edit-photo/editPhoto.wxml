@@ -38,4 +38,14 @@
   <view class="loading" wx:if="{{showLoading}}">
     <van-loading type="spinner" color="#fff" class="spinner" />
   </view>
+ <view class="vant">
+    <van-popup show="{{ showPop }}" bind:close="onClose" style="height: 20%">
+      <view>{{popMessage}}</view>
+    </van-popup>
+ </view>
+ <!-- <van-popup
+  show="{{ true }}"
+  position="top"
+  style="height: 20%"
+/> -->
 </view>
