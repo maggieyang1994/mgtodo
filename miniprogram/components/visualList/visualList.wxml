@@ -2,11 +2,10 @@
 <view>
   <view class="visualWrapper">
     <scroll-view scroll-y style="height:{{clientHeight}}px" bindscroll="scroll">
-      <view class="viewContent">
-         <todo-item class="border-botton border-color" wx:for="{{ visibleData }}"  wx:key="{{ index }}" users="{{ userList }}" value="{{ item }}" isActive="{{ active && active.id === item.id }}" bind:complete="onCompleteStateChange" bind:active="onActive" bind:change="onTodoChange" bind:delete="onDelete" />
+      <view style="height:{{totalHeight}}px; position:absolute; width:100%"></view>
+      <view style="transform:translateY({{offset}}px);z-index:2">
+        <todo-item class="border-botton border-color" wx:for="{{ visibleData }}" bindsetHeight="setHeightByopenId" wx:key="{{ index }}" users="{{ userList }}" value="{{ item }}" isActive="{{ active && active.id === item.id }}" bind:complete="onCompleteStateChange" bind:active="onActive" bind:change="onTodoChange" bind:delete="onDelete" />
       </view>
-      <view style="height:{{totalHeight}}px; position:absolute; top:0; right:0; left:0"></view>
     </scroll-view>
-     <todo-item class="border-botton border-color visualDom" value="{{fadeObj}}"></todo-item>
   </view>
 </view>

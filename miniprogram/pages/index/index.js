@@ -34,7 +34,7 @@ Page({
     console.log('Start inital ...')
     const result = await this.inital()
     console.log(`Inital ${result ? 'done' : 'fail'}`);
-    if(options.data){
+    if (options.data) {
       this.onCreateTodo(JSON.parse(options.data))
     }
     // const eventChannel = this.getOpenerEventChannel();
@@ -149,7 +149,7 @@ Page({
   },
 
   sortTodoList(list) {
-    return list.sort((x, y) => y.lastModify - x.lastModify)
+    return list.sort((x, y) => x.lastModify - y.lastModify)
   },
 
   // 更新 data 并按照修改时间排序
@@ -187,35 +187,18 @@ Page({
     // todo.creator = this.data.user
 
     const quickTodo = new QuickTodo(QuickTodo.mapping(todo))
-    const tag = quickTodo.lastModify
+
 
     // 马上添加一条 todo 到 list 并更新视图
     this.data.todoList
-      .unshift(quickTodo)
+      .push(quickTodo)
     this.data.createTodo = getDefaultTodo()
-    this.updateData()
+    this.updateData();
+    // setTimeout(() => {
+    //   debbuger;
+    //   console.log(this.data.todoList)
+    // })
 
-    // 发起请求 create todo
-    quickTodo.create()
-      .then(res => {
-        // 创建成功 - 更新本地数据
-        // res.result.creator = User.mapping(this.data.user)
-        !this.data.currentUser.openId && (this.data.currentUser.openId = res.result._openid)
-        const index = this.data.todoList.findIndex(x => x.lastModify === tag)
-        const baseTodo = new BaseTodo(res.result)
-        this.data.todoList.splice(index, 1, baseTodo)
-      })
-      .catch(e => {
-        // 创建失败 - 删除之前添加到 todo 并恢复 todo input 内容
-        const index = this.data.todoList.findIndex(x => x.lastModify === tag)
-        this.data.todoList.splice(index, 1)
-        this.data.createTodo = todo
-        Notify(e.msg)
-      })
-      .then(() => {
-        // 更新视图
-        this.updateData()
-      })
   },
 
   // Complete
@@ -324,11 +307,31 @@ Page({
         this.updateData()
       })
   },
-  takephoto() {
-    // 拍照上传
+  async setHeightByopenId({ detail }) {
+    let curTodo = this.data.todoList.find(x => x.lastModify === detail.lastModify)
+    curTodo.height = detail.height;
+    let res, todo
+    try {
+      if (detail.openId) {
+        // 之前存在数据库中的老数据
+        todo = new BaseTodo(BaseTodo.mapping(curTodo));
+        res = await todo.update(curTodo.id, todo)
 
-  },
-  takeAudio() {
-    // 录音上传
+      } else {
+        // 新增的数据
+        todo = new QuickTodo(QuickTodo.mapping(curTodo))
+        res = await todo.create()
+      }
+      console.log(res)
+      const index = this.data.todoList.findIndex(x => x.lastModify === todo.lastModify)
+      this.data.todoList.splice(index, 1, todo)
+
+    } catch (e) {
+      const index = this.data.todoList.findIndex(x => x.lastModify === todo.lastModify)
+      this.data.todoList.splice(index, 1)
+      this.data.createTodo = todo
+      Notify(e.msg)
+    }
+    this.updateData()
   }
 })

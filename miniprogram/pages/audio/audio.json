@@ -1,6 +1,8 @@
 {
   "usingComponents": {
     "van-notify": "vant-weapp/notify/index",
-    "bottomAddtodo": "../../components/bottomAddtodo/bottomAddtodo"
+    "bottomAddtodo": "../../components/bottomAddtodo/bottomAddtodo",
+    "van-popup": "vant-weapp/popup/index",
+    "van-loading": "vant-weapp/loading/index"
   }
 }

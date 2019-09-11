@@ -39,13 +39,9 @@
     <van-loading type="spinner" color="#fff" class="spinner" />
   </view>
  <view class="vant">
+   <!--  关于rpx https://developers.weixin.qq.com/miniprogram/dev/framework/view/wxss.html -->
     <van-popup show="{{ showPop }}" bind:close="onClose" style="height: 20%">
-      <view>{{popMessage}}</view>
+      <view style="padding: 40rpx">{{popMessage}}</view>
     </van-popup>
  </view>
- <!-- <van-popup
-  show="{{ true }}"
-  position="top"
-  style="height: 20%"
-/> -->
 </view>

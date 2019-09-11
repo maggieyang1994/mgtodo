@@ -8,10 +8,15 @@ Component({
       type: Array,
       require: true,
       observer: function (newVal, oldVal) {
-        // 计算总高度
-        let data = newVal.filter(x => !x.isComplete);
-        let total = 0;
-        let height = this.getContentHeight()
+        // 如何解决先后问题？
+        // 新增的时候  才没更新高度就 开始计算visibleData()了
+        setTimeout(() => {
+          if (newVal.length) {
+            this.getTotalHeight(newVal);
+            this.getVisibleData()
+          }
+        })
+
       }
     },
     clientHeight: {
@@ -25,6 +30,10 @@ Component({
     active: {
       type: Object,
       value: null
+    },
+    bufferSize: {
+      type: Number,
+      default: 2
     }
   },
 
@@ -35,18 +44,21 @@ Component({
     totalHeight: 0,
     visibleData: [],
     scrollTop: 0,
-    lastMeasuredIndex: -1,
+    lastMeasuredIndex: 0,
     sizeAndOffsetCahce: {},
-    fadeObj: {
-      title: 'rinima',
-      expireAt: null,
-      content: '',
-      isComplete: false
-
-    }
+    offset: 0
   },
-  attached() {
-    this.getVisibleData()
+  ready() {
+    console.log(this.properties.data)
+    setTimeout(() => {
+      this.getVisibleData()
+    })
+  },
+  observers: {
+    "data.data": function (newVal) {
+      console.log('observers', newVal);
+      // this.totalHeight = 
+    }
   },
   /**
    * 组件的方法列表
@@ -59,45 +71,35 @@ Component({
       this.getVisibleData()
     },
     getVisibleData() {
-      let scrollTop = this.data.scrollTop || 0;
-
-    },
-    getItemHeight(item, index) {
+      let buffer = this.properties.bufferSize
+      let { index: startIndex, offset } = this.getNearestIndex(this.data.scrollTop);
+      let { index: endIndex } = this.getNearestIndex(this.data.scrollTop + this.properties.clientHeight);
+      console.log(startIndex, endIndex)
+      startIndex = startIndex - buffer <= 0 ? startIndex : startIndex - buffer;
+      endIndex = endIndex + buffer;
+      // slice 左闭右开
+      this.data.visibleData = this.properties.data.slice(startIndex, endIndex + 1);
+      this.data.offset = offset;
       this.setData({
-        fadeObj: {
-          ...this.data.fadeObj,
-          value: item.title
-        }
-      });
-      // 设置成功之后获取dom高度
-      return new Promise((resolve, reject) => {
-        const query = wx.createSelectorQuery()
-        query.select('.visualDom').boundingClientRect();
-        query.exec(function (res) {
-          resolve(res.height)
-        })
+        visibleData: this.data.visibleData,
+        offset: this.data.offset
       })
+    },
+    getNearestIndex(height) {
+      if (!height) return { index: 0, offset: 0 };
+      let len = this.properties.data.length;
+      let temp = 0, size = 0
+      for (var i = 0; i < len; i++) {
+        size = this.getItemHeight(i);
+        temp += size
+        if (temp >= height) return { index: i, offset: temp - size }
+      }
+      return {
+        index: i,
+        offset: temp - size
+      }
+    },
 
-    },
-    async getContentHeight(arr) {
-      for(let i = 0; i< arr.length; i++){
-        let temp = await this.g
-      }
-    },
-    async getItemOffset(index){
-      let total = 0; 
-      let {sizeAndOffsetCahce, lastMeasuredIndex} = this.data
-      if(index <= lastMeasuredIndex) return sizeAndOffsetCahce[index];
-      if(lastMeasuredIndex > 0){
-        const lastMeasured = sizeAndOffsetCahce[lastMeasuredIndex]
-      };
-      if(lastMeasured){
-        total = lastMeasured.offset + lastMeasured.size
-      }
-      for(let i = lastMeasuredIndex; i<index;i++){
-        let temp = await this.getItemHeight()
-      }
-    },
     onCompleteStateChange(e) {
       this.triggerEvent("complete", { id: e.detail.id })
     },
@@ -110,5 +112,19 @@ Component({
     onDelete(e) {
       this.triggerEvent("delete", { id: e.detail.id })
     },
+    getItemHeight(index) {
+      return this.properties.data[index].height
+    },
+    setHeightByopenId({ detail }) {
+      this.triggerEvent("setHeight", { ...detail });
+      this.setData({
+        totalHeight: this.data.totalHeight + detail.height
+      })
+    },
+    getTotalHeight(val) {
+      this.setData({
+        totalHeight: val.map(x => x.height).reduce((o, item) => o += item || 0)
+      })
+    }
   }
 })

@@ -11,14 +11,16 @@
     </view>
   </view>
   <view class="translatedText" wx:if="{{translatedText.length}}">
-     <text class="text">{{translatedText}}</text>
-    </view>
-  <!-- <view class="bottom" wx:if="{{translatedText.length}}">
-    <button bindtap="addTodo">添加到todo</button>
-     <button bindtap="cancelTodo">取消</button>
-  </view> -->
-  <bottomAddtodo isShow="{{translatedText.length}}" bindaddTodo="addTodo" bindcancelTodo="cancelTodo"/>
+    <text class="text">{{translatedText}}</text>
+  </view>
+  <bottomAddtodo isShow="{{translatedText.length}}" bindaddTodo="addTodo" bindcancelTodo="cancelTodo" />
+  <view class="loading" wx:if="{{showLoading}}">
+    <van-loading type="spinner" color="#fff" class="spinner" />
+  </view>
   <view class="popup" wx:if="{{isPress}}">
     <image src="../../assets/image/voice.png" style="width:100rpx;height:100rpx" />
   </view>
+ <van-popup show="{{ showPop }}" bind:close="onClose" style="height: 20%">
+      <view style="padding: 40rpx">{{popMessage}}</view>
+</van-popup>
 </view>

@@ -67,9 +67,11 @@
   display: flex;
   justify-content: center;
   padding:20rpx 0;
+  flex:1
 }
 .textWrapprer{
   margin-top:20rpx;
+  height: 30%
 }
 .sourceImg{
   display:block;
@@ -79,6 +81,7 @@
 .cutting{
   display:flex;
   justify-content:space-around;
+  height: 10%
 }
 .loading{
   width:100%;

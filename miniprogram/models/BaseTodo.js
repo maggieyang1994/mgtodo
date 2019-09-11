@@ -9,6 +9,7 @@ class BaseTodo extends QuickTodo {
         this.openId = meta._openid
         this.createAt = meta.create_at
         this.lastModify = meta.last_modify
+
         // this.creator = new User(meta.creator)
 
         this.isChange = false
@@ -31,10 +32,11 @@ class BaseTodo extends QuickTodo {
         this.expireAt = meta.expire_at
         this.completeAt = meta.complete_at
         this.isComplete = meta.is_complete
+        this.height = meta.height
     }
 
     static mapping(source) {
-      const { id, openId, createAt, expireAt, lastModify, isComplete, title, content, creator, completeAt } = source
+      const { id, openId, createAt, expireAt, lastModify, isComplete, title, content, creator, completeAt , height} = source
         return {
             _id: id,
             _openid: openId,
@@ -44,7 +46,8 @@ class BaseTodo extends QuickTodo {
             is_complete: isComplete,
             complete_at: completeAt,
             title: title,
-            content: content
+            content: content,
+            height,
         }
     }
 

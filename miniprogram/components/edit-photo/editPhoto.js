@@ -196,21 +196,17 @@ Component({
         return;
       }
       adapter.image2Text(auth, imageData).then(res => {
-        // 为什么必须要开通 本地调试才会有效果？？？？？
-        if (res.result.error_code === 110) this.setData({ popMessage: '权限已经过期' ,showPop: true})
+        // 为什么必须要开通 本地调试才会有效果？？？？？  ---->还不是因为你没更新云端代码 因为开通了本地调试用的是本地代码  没开通用的云端代码 
+        if (res.result.error_code === 110) this.setData({ popMessage: '权限已经过期', showPop: true ,showLoading: false})
         else {
           this.setData({
-            translatedText: res.result.words_result.map(x => x.words).join("\r\n")
+            translatedText: res.result.words_result.map(x => x.words).join("\r\n"),
+            showLoading: false
           });
         }
 
       }).catch(e => {
-
-        this.setData({ popMessage: e.message ,showPop: true})
-      }).finally(() => {
-        this.setData({
-          showLoading: false
-        })
+        this.setData({ popMessage: e.message, showPop: true, showLoading: false })
       })
     },
     cancelTodo() {
@@ -231,7 +227,7 @@ Component({
         // }
       })
     },
-    onClose(){
+    onClose() {
       this.setData({
         showPop: false
       })

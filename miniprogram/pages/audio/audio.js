@@ -7,7 +7,7 @@ let recordManager = wx.getRecorderManager();
 let audioManager = wx.createInnerAudioContext();
 let fileManager = wx.getFileSystemManager()
 
-recordManager.onStart(function () {
+recordManager.onStart(async function () {
   console.log('start recording')
   // app.store.dispatch(showAudio(true));
 
@@ -17,7 +17,7 @@ recordManager.onStart(function () {
   if (!self.data.isLastStoped) self.touchend()
 })
 recordManager.onStop(
- async  function (res) {
+  async function (res) {
     console.log('end recording')
     // app.store.dispatch(showAudio(false));
     self.setData({
@@ -25,30 +25,41 @@ recordManager.onStop(
       isLastStoped: true,
       canPlayAudio: true,
       audioPath: res.tempFilePath,
-      translatedText: 'rinima'
+      showLoading: true
     });
- let auth =  await getBaiduAuth('http://openapi.baidu.com/oauth/2.0/token', 'voice2TextToken', 'voice');
- console.log(auth)
-    // getBaiduAuth('http://openapi.baidu.com/oauth/2.0/token', 'voice2TextToken', 'voice').then(auth => {
-    //   let base64 = fileManager.readFileSync(res.tempFilePath, 'base64');
-    //   wx.request({
-    //     url: 'http://106.53.100.8:3000/voice2Text',
-    //     method: 'POST',
-    //     data: {
-    //       // auth: { token: "24.23d6e40a8e5bdba40a5680da9378c809.2592000.1570592293.282335-17049972" },
-    //       auth,
-    //       fileContent: base64,
-    //       fileSize: res.fileSize
+    let [auth, err] = await getBaiduAuth('http://openapi.baidu.com/oauth/2.0/token', 'voice2TextToken', 'voice').then(res => [res, null]).catch(e => [null, e])
+    if (err) {
+      self.setData({
+        showLoading: false,
+        popMessage: err.errMsg,
+        showPop: true
+      });
+      return;
+    }
+    let base64 = fileManager.readFileSync(res.tempFilePath, 'base64');
+    wx.request({
+      url: 'http://106.53.100.8:3000/voice2Text',
+      method: 'POST',
+      data: {
+        // auth: { token: "24.23d6e40a8e5bdba40a5680da9378c809.2592000.1570592293.282335-17049972" },
+        auth,
+        fileContent: base64,
+        fileSize: res.fileSize
 
-    //     },
-    //     success: function (res) {
-    //       console.log(res)
-    //     },
-    //     fail: function (err) {
-    //       console.log(err)
-    //     }
-    //   })
-    // })
+      },
+      success: function (res) {
+        res.data.err_msg === "success." ? self.setData({ translatedText: res.data.result.join("") }) :  self.setData({ popMessage: res.data.err_msg, showPop: true })
+      },
+      fail: function (err) {
+        self.setData({ popMessage: '转换失败',showPop: true })
+      },
+      complete: function(){
+        self.setData({
+          showLoading: false
+        })
+      }
+    })
+ 
 
   })
 Page({
@@ -59,7 +70,10 @@ Page({
     isPress: false,
     canPlayAudio: false,
     audioPath: '',
-    translatedText: ''
+    translatedText: '',
+    showLoading: false,
+    popMessage: '',
+    showPop: false
   },
   onLoad: function (options) {
     self = this
@@ -103,5 +117,10 @@ Page({
   },
   cancelTodo() {
     wx.navigateTo({ url: "/pages/index/index" })
+  },
+  onClose(){
+    this.setData({
+      showPop: false
+    })
   }
 })

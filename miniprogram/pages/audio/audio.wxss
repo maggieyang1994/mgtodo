@@ -47,6 +47,27 @@ line-height: 300rpx;
   flex-wrap: warp;
  white-space: pre-wrap;
 }
+
+
+.loading{
+  
+  position: absolute;
+ 
+  text-align: center;
+  background-color: black;
+  opacity: 0.3;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  
+  
+}
+.spinner{
+  position:absolute;
+  top:50%;
+  transform: translatey(-50%)
+}
 /* .bottom{
   position: fixed;
   bottom:0;

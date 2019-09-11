@@ -1,5 +1,5 @@
-export const getBaiduAuth = async (url, storageKey, type) => {
-
+export const getBaiduAuth =  (url, storageKey, type) => {
+// 外层是async 内层又返回一个Promise  要用两个.then才能拿到最终结果
   let curTime = Date.parse(new Date())
   let auth = wx.getStorageSync(storageKey);
   auth = auth && JSON.parse(auth)

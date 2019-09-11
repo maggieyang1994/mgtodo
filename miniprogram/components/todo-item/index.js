@@ -15,8 +15,8 @@ Component({
             }
         },
         users: {
-          type: Array,
-          value: []
+            type: Array,
+            value: []
         },
         isActive: {
             type: Boolean,
@@ -27,11 +27,20 @@ Component({
     data: {
         detailFormatExpireDate: '',
         detailFormatCreateDate: '',
-        detailCompleteDate:'',
+        detailCompleteDate: '',
         creator: {},
         isInputContent: false
     },
+    ready: function () {
+       if (!this.properties.value.height) {
+            let query = this.createSelectorQuery();
+            query.select(".todo-item").boundingClientRect();
+            query.exec((res) => {
+                this.triggerEvent("setHeight", { lastModify: this.properties.value.lastModify, height: Math.ceil(res[0].height), openId: this.properties.value._openid || this.properties.value.openId })
+            })
 
+        }
+    },
     methods: {
         onCompleteStateChange() {
             const id = this.properties.value.id
@@ -40,7 +49,7 @@ Component({
 
         onActive() {
             const id = this.properties.value.id
-            this.triggerEvent('active', { id })
+            this.triggerEvent('active', { id });
         },
 
         onChange(e) {
@@ -63,14 +72,14 @@ Component({
             this.triggerEvent('delete', { id })
         },
 
-        toggelInputContent () {
+        toggelInputContent() {
             this.setData({
                 isInputContent: !this.data.isInputContent
             })
         },
 
         nothing() {
-
+            console.log('nothing')
         },
 
         // 日期格式化
@@ -83,7 +92,7 @@ Component({
             const isSamMonth = dayjsObj.isSame(today, 'month')
             const isSamYear = dayjsObj.isSame(today, 'year')
             const apartDays = dayjsObj.diff(today, 'day')
-            
+
             // 指定格式
             if (tmp) {
                 return dayjsObj.format(tmp)

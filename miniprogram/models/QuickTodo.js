@@ -10,16 +10,18 @@ class QuickTodo {
         // this.creator = meta.creator
         this.lastModify = new Date().getTime()
         this.completeAt = meta.completeAt;
+        this.height = meta.height
     }
 
     static mapping(source) {
-        const { title, expireAt, content, isComplete, lastModify } = source
+        const { title, expireAt, content, isComplete, lastModify, height } = source
         return {
             title: title,
             expire_at: expireAt,
             content: content,
             is_complete: isComplete,
-            last_modify: lastModify
+            last_modify: lastModify,
+            height
         }
     }
 
