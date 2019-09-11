@@ -6,3 +6,5 @@ cloudfunctions/image2Text/node_modules
 cloudfunctions/image2Text/miniprogram_npm
 cloudfunctions/voice2Text/miniprogram_npm
 cloudfunctions/voice2Text/node_modules
+cloudfunctions/updateTodo/miniprogram_npm
+cloudfunctions/updateTodo/node_modules
