@@ -3,8 +3,9 @@
   <view class="visualWrapper">
     <scroll-view scroll-y style="height:{{clientHeight}}px" bindscroll="scroll">
       <view style="height:{{totalHeight}}px; position:absolute; width:100%"></view>
-      <view style="transform:translateY({{offset}}px);z-index:2">
-        <todo-item class="border-botton border-color" wx:for="{{ visibleData }}" bindsetHeight="setHeightByopenId" wx:key="{{ index }}" users="{{ userList }}" value="{{ item }}" isActive="{{ active && active.id === item.id }}" bind:complete="onCompleteStateChange" bind:active="onActive" bind:change="onTodoChange" bind:delete="onDelete" />
+      <!-- style="transform:translateY({{scrollTop}}px);z-index:2" -->
+      <view style="transform:translateY({{offset}}px);">
+        <todo-item class="border-botton border-color{{item.lastModify}}" wx:for="{{ visibleData }}" bindsetHeight="setHeightByopenId" wx:key="lastModify" users="{{ userList }}" value="{{ item }}" isActive="{{ active && active.id === item.id }}" bind:complete="onCompleteStateChange" bind:active="onActive" bind:change="onTodoChange" bind:delete="onDelete"/>
       </view>
     </scroll-view>
   </view>

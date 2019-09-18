@@ -24,7 +24,8 @@ const indexPageData = {
   currentUser: {},
   userList: [],
   createTodo: getDefaultTodo(),
-  showAudio: false
+  completeTodo: [],
+  unCompleteTodo: []
 }
 
 Page({
@@ -37,17 +38,6 @@ Page({
     if (options.data) {
       this.onCreateTodo(JSON.parse(options.data))
     }
-    // const eventChannel = this.getOpenerEventChannel();
-    // console.log(eventChannel)
-    // eventChannel.on('onCreateTodo', function(data) {
-    //   console.log("from audio", data)
-    // })
-    // subscribeId = app.store.subscribe(function () {
-    //   let data = app.store.getState().showAudio
-    //   self.setData({
-    //     showAudio: data.showAudio
-    //   })
-    // })
   },
   onunload() {
     // subscribeId()
@@ -72,14 +62,16 @@ Page({
   },
 
   cacheInital(cache) {
-    const { login, currentUser, active, todoList, createTodo, userList } = cache
+    const { login, currentUser, active, todoList, createTodo, userList,completeTodo, unCompleteTodo } = cache
     const data = {
       login,
       currentUser: new User(currentUser),
       userList,
       active,
       todoList: todoList.map(x => new BaseTodo(x)),
-      createTodo
+      createTodo,
+      completeTodo,
+      unCompleteTodo
     }
 
     adapter.login(currentUser)
@@ -149,7 +141,8 @@ Page({
   },
 
   sortTodoList(list) {
-    return list.sort((x, y) => x.lastModify - y.lastModify)
+    //  降序
+    return list.sort((x, y) => y.lastModify - x.lastModify)
   },
 
   // 更新 data 并按照修改时间排序
@@ -157,21 +150,26 @@ Page({
     const todoList = sort ? this.sortTodoList(this.data.todoList) : null
     this.setData({
       ...this.data,
-      ...sort && { todoList }
+      ...sort && { todoList },
+      completeTodo: this.data.todoList.filter(x => x.isComplete),
+      unCompleteTodo: this.data.todoList.filter(x => !x.isComplete)
     })
 
     const cache = {
       ...this.data,
       currentUser: User.mapping(this.data.currentUser),
       userList: this.data.userList,
-      todoList: this.data.todoList.map(x => BaseTodo.mapping(x))
+      todoList: this.data.todoList.map(x => BaseTodo.mapping(x)),
+      completeTodo: this.data.todoList.map(x => BaseTodo.mapping(x)).filter(x => x.isComplete),
+      unCompleteTodo: this.data.todoList.map(x => BaseTodo.mapping(x)).filter(x => !x.isComplete)
     }
 
     wx.setStorage({
       key: 'cache',
       data: cache
     })
-    console.log('Update data and caching.', cache)
+    console.log('Update data and caching.', cache);
+    console.log(this.data.completeTodo, this.data.unCompleteTodo)
   },
 
   // Todo input 内容 change
@@ -191,7 +189,7 @@ Page({
 
     // 马上添加一条 todo 到 list 并更新视图
     this.data.todoList
-      .push(quickTodo)
+      .unshift(quickTodo)
     this.data.createTodo = getDefaultTodo()
     this.updateData();
     // setTimeout(() => {
@@ -322,9 +320,11 @@ Page({
         todo = new QuickTodo(QuickTodo.mapping(curTodo))
         res = await todo.create()
       }
-      console.log(res)
-      const index = this.data.todoList.findIndex(x => x.lastModify === todo.lastModify)
-      this.data.todoList.splice(index, 1, todo)
+      const index = this.data.todoList.findIndex(x => x.lastModify === todo.lastModify || x.lastModify === detail.lastModify);
+      !detail.openId && (todo = new BaseTodo(res.result))
+      // console.log(basetTodo)
+      index !== -1 && this.data.todoList.splice(index, 1, todo)
+      
 
     } catch (e) {
       const index = this.data.todoList.findIndex(x => x.lastModify === todo.lastModify)

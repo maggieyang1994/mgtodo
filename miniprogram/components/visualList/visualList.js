@@ -45,8 +45,8 @@ Component({
     visibleData: [],
     scrollTop: 0,
     lastMeasuredIndex: 0,
-    sizeAndOffsetCahce: {},
-    offset: 0
+    sizeAndOffsetCahce: {}, 
+    offset:0
   },
   ready() {
     console.log(this.properties.data)
@@ -65,38 +65,41 @@ Component({
    */
   methods: {
     scroll(e) {
-      this.setData({
-        scrollTop: e.detail.scrollTop
-      });
-      this.getVisibleData()
+      let {scrollTop, scrollHeight} = e.detail;
+      if(scrollTop + this.properties.clientHeight < scrollHeight){
+        this.setData({
+          scrollTop
+        });
+        this.getVisibleData()
+      }
+      
     },
     getVisibleData() {
       let buffer = this.properties.bufferSize
-      let { index: startIndex, offset } = this.getNearestIndex(this.data.scrollTop);
+      let { index: startIndex, offset} = this.getNearestIndex(this.data.scrollTop);
       let { index: endIndex } = this.getNearestIndex(this.data.scrollTop + this.properties.clientHeight);
       console.log(startIndex, endIndex)
       startIndex = startIndex - buffer <= 0 ? startIndex : startIndex - buffer;
       endIndex = endIndex + buffer;
       // slice 左闭右开
-      this.data.visibleData = this.properties.data.slice(startIndex, endIndex + 1);
-      this.data.offset = offset;
+      this.data.visibleData = this.properties.data.slice(startIndex, endIndex + 1)
       this.setData({
         visibleData: this.data.visibleData,
-        offset: this.data.offset
+        offset: Math.ceil(this.data.scrollTop)
       })
     },
     getNearestIndex(height) {
-      if (!height) return { index: 0, offset: 0 };
+      if (!height) return { index: 0, offset: 0};
       let len = this.properties.data.length;
       let temp = 0, size = 0
       for (var i = 0; i < len; i++) {
         size = this.getItemHeight(i);
         temp += size
-        if (temp >= height) return { index: i, offset: temp - size }
+        if (temp >= height) return { index: i, offset: temp}
       }
       return {
         index: i,
-        offset: temp - size
+        offset: temp
       }
     },
 

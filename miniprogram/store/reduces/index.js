@@ -9,6 +9,14 @@ const showAudio = (state = { showAudio: false }, action) => {
   return JSON.parse(JSON.stringify(state))
 }
 
+
+// const updateTodoList = (state = {todoList: []}, action) => {
+//   let {type, todoList} = action;
+//   switch(type){
+//     case 'addTodoList': state.todoList.push(todoList);
+//     case 'deleteTodoList' : state.todoList
+//   }
+// }
 export default {
   showAudio
 }
