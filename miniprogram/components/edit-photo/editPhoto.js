@@ -231,6 +231,10 @@ Component({
       this.setData({
         showPop: false
       })
+    },
+    handleInput({detail}){
+      console.log(detail)
+      this.data.translatedText = detail.value
     }
   }
 
