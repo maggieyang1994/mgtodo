@@ -27,7 +27,7 @@ recordManager.onStop(
       audioPath: res.tempFilePath,
       showLoading: true
     });
-    let [auth, err] = await getBaiduAuth('http://openapi.baidu.com/oauth/2.0/token', 'voice2TextToken', 'voice').then(res => [res, null]).catch(e => [null, e])
+    let [auth, err] = await getBaiduAuth('https://openapi.baidu.com/oauth/2.0/token', 'voice2TextToken', 'voice').then(res => [res, null]).catch(e => [null, e])
     if (err) {
       self.setData({
         showLoading: false,
@@ -37,18 +37,16 @@ recordManager.onStop(
       return;
     }
     let base64 = fileManager.readFileSync(res.tempFilePath, 'base64');
-    wx.request({
-      url: 'http://106.53.100.8:3000/voice2Text',
-      method: 'POST',
+    wx.cloud.callFunction({
+      name: 'voice2Text',
       data: {
         // auth: { token: "24.23d6e40a8e5bdba40a5680da9378c809.2592000.1570592293.282335-17049972" },
         auth,
         fileContent: base64,
         fileSize: res.fileSize
-
       },
       success: function (res) {
-        res.data.err_msg === "success." ? self.setData({ translatedText: res.data.result.join("") }) :  self.setData({ popMessage: res.data.err_msg, showPop: true })
+        res.result.err_msg === "success." ? self.setData({ translatedText: res.result.result.join("") }) :  self.setData({ popMessage: res.result.err_msg, showPop: true })
       },
       fail: function (err) {
         self.setData({ popMessage: '转换失败',showPop: true })

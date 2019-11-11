@@ -5,7 +5,7 @@ cloud.init({
 });
 const axios = require("axios")
 exports.main = async (event, context) => {
-  let url = 'http://vop.baidu.com/pro_api';
+  let url = 'https://vop.baidu.com/pro_api';
   let {auth, fileSize, fileContent} = event;
   let param = {
     "dev_pid": 80001,

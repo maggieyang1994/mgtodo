@@ -82,22 +82,34 @@ Component({
       let { left, width, height, top } = await this.getElement(".movableArea");
       // 必须在区域内移动
       if (this.data.startPosition && clientX >= left && clientX <= left + width && clientY >= top && clientY <= height + top) {
+        
         if (direction.indexOf("top") !== -1) {
           // 向下- 向上 +
-          temp[0] = startY - pageY
+          let tempTop = startY - pageY;
+          // 如果往下 并且高度大于0的情况下 才能继续向下
+          if(tempTop >= 0 || (tempTop <=0 && this.data.movablePosotion.height + temp[0] - temp[2] >= 20)) temp[0] = tempTop
         }
         if (direction.indexOf("left") !== -1) {
           // 向右-  向左 +
-          temp[1] = startX - pageX
+          let tempLeft =startX - pageX;
+          if(tempLeft >= 0 || (tempLeft <=0 && this.data.movablePosotion.width + temp[1] - temp[3] > 20)) {
+            temp[1] = tempLeft;
+            console.log('tempLeft', tempLeft)
+            console.log('width', this.data.movablePosotion.width + temp[1] - temp[3])
+          }
         }
         if (direction.indexOf("bottom") !== -1) {
           // 向下- 向上 +
-          temp[2] = startY - pageY
+          let tempBottom  = startY - pageY
+          if(tempBottom <=0  || (tempBottom >=0 && this.data.movablePosotion.height + temp[0] - temp[2] >= 20)) temp[2] = tempBottom
         }
         if (direction.indexOf("right") !== -1) {
           // 向右-  向左 +
-          temp[3] = startX - pageX
+          let tempRight = startX - pageX;
+          if(tempRight <= 0 || (tempRight > 0 && this.data.movablePosotion.width + temp[1] - temp[3] >= 20))  temp[3] = tempRight
         }
+        
+        // console.log('height', this.data.movablePosotion.height + temp[0] - temp[2])
         this.setData({
           temp
         })
@@ -148,9 +160,9 @@ Component({
       // 等比例放大图片
       // 不能画网络图片
       wx.getImageInfo({
-        src: this.data.sourceImg,
+        src: this.data.resultImg || this.data.sourceImg,
         success: (res) => {
-          ctx.drawImage(res.path, (this.data.movablePosotion.left - this.data.outview.left) / this.data.scale, (this.data.movablePosotion.top - this.data.outview.top) / this.data.scale, this.data.movablePosotion.width / this.data.scale, this.data.movablePosotion.height / this.data.scale, 0, 0, this.data.movablePosotion.width / this.data.scale, this.data.movablePosotion.height / this.data.scale)
+          ctx.drawImage(res.path, this.data.movablePosotion.left / this.data.scale, this.data.movablePosotion.top / this.data.scale, this.data.movablePosotion.width / this.data.scale, this.data.movablePosotion.height / this.data.scale, 0, 0, this.data.movablePosotion.width / this.data.scale, this.data.movablePosotion.height / this.data.scale)
           ctx.draw(false, () => {
             wx.canvasToTempFilePath({
               quality: 1,
@@ -214,7 +226,8 @@ Component({
     },
     addTodo() {
       let todoObj = {
-        title: this.data.translatedText || 'rinima',
+        // url参数中有特殊字符的时候 需要encode
+        title: encodeURIComponent(this.data.translatedText),
         expireAt: null,
         content: '',
         isComplete: false

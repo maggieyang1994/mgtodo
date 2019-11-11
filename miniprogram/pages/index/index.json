@@ -4,5 +4,7 @@
     "todo-item": "../../components/todo-item/index",
     "van-notify": "vant-weapp/notify/index",
     "visualList": "../../components/visualList/visualList"
-  }
+  },
+  "enablePullDownRefresh": true
+  
 }

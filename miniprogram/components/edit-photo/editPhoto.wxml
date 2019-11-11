@@ -1,47 +1,49 @@
 <!-- components/editPhoto/editPhoto.wxml -->
-<view class="EditPhoto">
-  <view class="cutting">
-    <van-button type="default" bindtap="cut" wx:if="{{!showCut}}">裁剪</van-button>
-    <van-button type="default" bindtap="handleCut" wx:if="{{showCut}}">确认裁剪</van-button>
-    <van-button type="default" bindtap="cancelCut" wx:if="{{showCut}}">取消裁剪</van-button>
-    <van-button bindtap="image2Text" wx:if="{{!showCut}}">识别图中文字</van-button>
-  </view>
-  <view class="imageWrapper">
-    <movable-area style="width: {{outview. width}}px; height: {{outview.height}}px" class="movableArea">
-      <image src="{{resultImg || sourceImg}}" class="fullWidth fullHeight" bindload="imageOnload"></image>
-      <!-- <view>x: {{movablePosotion.left - temp[1]}}</view>
+<view class="fullWidth fullHeight">
+  <view class="EditPhoto" wx:if="{{!translatedText.length}}">
+    <view class="cutting">
+      <van-button type="default" bindtap="cut" wx:if="{{!showCut}}">裁剪</van-button>
+      <van-button type="default" bindtap="handleCut" wx:if="{{showCut}}">确认裁剪</van-button>
+      <van-button type="default" bindtap="cancelCut" wx:if="{{showCut}}">取消裁剪</van-button>
+      <van-button bindtap="image2Text" wx:if="{{!showCut}}">识别图中文字</van-button>
+    </view>
+    <view class="imageWrapper">
+      <movable-area style="width: {{outview. width}}px; height: {{outview.height}}px" class="movableArea">
+        <image src="{{resultImg || sourceImg}}" class="fullWidth fullHeight" bindload="imageOnload"></image>
+        <!-- <view>x: {{movablePosotion.left - temp[1]}}</view>
       <view>y: {{movablePosotion.top - temp[0]}}</view>
       <view>width:{{movablePosotion.width + temp[1] - temp[3]}}</view>
       <view>height:{{movablePosotion.height + temp[0] - temp[2]}}</view> -->
-      <movable-view class="movable fullWidth fullHeight" animation='{{false}}' direction="all" wx:if="{{showCut}}" x="{{movablePosotion.left - temp[1]}}" y="{{movablePosotion.top - temp[0]}}" style=" height:{{movablePosotion.height + temp[0] - temp[2]}}px;width:{{movablePosotion.width + temp[1] - temp[3]}}px" bindchange="onChange">
-        <!-- style="top:{{movablePosotion.top}}rpx; left: {{movablePosotion.left}}rpx; height:{{movablePosotion.height}}rpx;width:{{movablePosotion.width}}rpx" -->
-        <view class="point-line pl-left top br-top " data-type="top" catchtouchstart="dragStart" catchtouchmove="dragMove" catchtouchend="dragEnd" />
-        <view class="point-line pl-top right br-right" data-type="right" catchtouchstart="dragStart" catchtouchmove="dragMove" catchtouchend="dragEnd" />
-        <view class="point-line pl-top left br-left" data-type="left" catchtouchstart="dragStart" catchtouchmove="dragMove" catchtouchend="dragEnd" />
-        <view class="point-line pl-left bottom br-bottom " data-type="bottom" catchtouchstart="dragStart" catchtouchmove="dragMove" catchtouchend="dragEnd" />
-        <view class="point-line br-top br-left left top" data-type="top,left" catchtouchstart="dragStart" catchtouchmove="dragMove" catchtouchend="dragEnd" />
-        <view class="point-line br-top br-right top right" data-type="top,right" catchtouchstart="dragStart" catchtouchmove="dragMove" catchtouchend="dragEnd" />
-        <view class="point-line br-bottom br-left bottom left" data-type="bottom,left" catchtouchstart="dragStart" catchtouchmove="dragMove" catchtouchend="dragEnd" />
-        <view class="point-line br-bottom br-right bottom right" data-type="bottom,right" catchtouchstart="dragStart" catchtouchmove="dragMove" catchtouchend="dragEnd" />
-      </movable-view>
-      <!-- 看文档不仔细 -->
-      <!-- <canvas id="canvas1"  style="width: {{movablePosotion.width}}px; height: {{movablePosotion.height}}px;border:1px solid red" wx:if="{{imageLoaded}}"></canvas> -->
-      <canvas canvas-id="canvas1" style="width: {{movablePosotion.width/scale}}px; height: {{movablePosotion.height/scale}}px;position:absolute;top:0;left:-999999px"></canvas>
-    </movable-area>
-  </view>
-  <view class="textWrapprer">
-    <view class="translatedText" wx:if="{{translatedText.length}}">
-     <textarea  class="text" value ="{{translatedText}}" bindinput="handleInput"></textarea>
+        <movable-view class="movable fullWidth fullHeight" animation='{{false}}' direction="all" wx:if="{{showCut}}" x="{{movablePosotion.left - temp[1]}}" y="{{movablePosotion.top - temp[0]}}" style=" height:{{movablePosotion.height + temp[0] - temp[2]}}px;width:{{movablePosotion.width + temp[1] - temp[3]}}px" bindchange="onChange">
+          <!-- style="top:{{movablePosotion.top}}rpx; left: {{movablePosotion.left}}rpx; height:{{movablePosotion.height}}rpx;width:{{movablePosotion.width}}rpx" -->
+          <view class="point-line pl-left top br-top " data-type="top" catchtouchstart="dragStart" catchtouchmove="dragMove" catchtouchend="dragEnd" />
+          <view class="point-line pl-top right br-right" data-type="right" catchtouchstart="dragStart" catchtouchmove="dragMove" catchtouchend="dragEnd" />
+          <view class="point-line pl-top left br-left" data-type="left" catchtouchstart="dragStart" catchtouchmove="dragMove" catchtouchend="dragEnd" />
+          <view class="point-line pl-left bottom br-bottom " data-type="bottom" catchtouchstart="dragStart" catchtouchmove="dragMove" catchtouchend="dragEnd" />
+          <view class="point-line br-top br-left left top" data-type="top,left" catchtouchstart="dragStart" catchtouchmove="dragMove" catchtouchend="dragEnd" />
+          <view class="point-line br-top br-right top right" data-type="top,right" catchtouchstart="dragStart" catchtouchmove="dragMove" catchtouchend="dragEnd" />
+          <view class="point-line br-bottom br-left bottom left" data-type="bottom,left" catchtouchstart="dragStart" catchtouchmove="dragMove" catchtouchend="dragEnd" />
+          <view class="point-line br-bottom br-right bottom right" data-type="bottom,right" catchtouchstart="dragStart" catchtouchmove="dragMove" catchtouchend="dragEnd" />
+        </movable-view>
+        <!-- 看文档不仔细 -->
+        <!-- <canvas id="canvas1"  style="width: {{movablePosotion.width}}px; height: {{movablePosotion.height}}px;border:1px solid red" wx:if="{{imageLoaded}}"></canvas> -->
+        <canvas canvas-id="canvas1" style="width: {{movablePosotion.width/scale}}px; height: {{movablePosotion.height/scale}}px;position:absolute;top:0;left:-999999px"></canvas>
+      </movable-area>
     </view>
-    <bottomAddtodo isShow="{{translatedText.length}}" bindaddTodo="addTodo" bindcancelTodo="cancelTodo" class="bottomAddtodo"/>
+   <view class="loading" wx:if="{{showLoading}}">
+      <van-loading type="spinner" color="#fff" class="spinner" />
+    </view>
+    <view class="vant">
+      <!-- 关于rpx https://developers.weixin.qq.com/miniprogram/dev/framework/view/wxss.html -->
+      <van-popup show="{{ showPop }}" bind:close="onClose" style="height: 20%">
+        <view style="padding: 40rpx">{{popMessage}}</view>
+      </van-popup>
+    </view>
   </view>
-  <view class="loading" wx:if="{{showLoading}}">
-    <van-loading type="spinner" color="#fff" class="spinner" />
+  <view class="textWrapprer" wx:if="{{translatedText.length}}">
+    <view class="translatedText" >
+      <textarea class="text" value="{{translatedText}}" bindinput="handleInput"></textarea>
+    </view>
+    <bottomAddtodo isShow="{{translatedText.length}}" bindaddTodo="addTodo" bindcancelTodo="cancelTodo" class="bottomAddtodo" />
   </view>
- <view class="vant">
-   <!--  关于rpx https://developers.weixin.qq.com/miniprogram/dev/framework/view/wxss.html -->
-    <van-popup show="{{ showPop }}" bind:close="onClose" style="height: 20%">
-      <view style="padding: 40rpx">{{popMessage}}</view>
-    </van-popup>
- </view>
 </view>

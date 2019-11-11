@@ -36,7 +36,9 @@ Page({
     const result = await this.inital()
     console.log(`Inital ${result ? 'done' : 'fail'}`);
     if (options.data) {
-      this.onCreateTodo(JSON.parse(options.data))
+      let temp = JSON.parse(options.data);
+      temp.title = decodeURIComponent(temp.title)
+      this.onCreateTodo(temp)
     }
   },
   onunload() {
