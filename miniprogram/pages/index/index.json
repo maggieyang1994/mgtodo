@@ -5,6 +5,6 @@
     "van-notify": "vant-weapp/notify/index",
     "visualList": "../../components/visualList/visualList"
   },
-  "enablePullDownRefresh": true
-  
+  "enablePullDownRefresh": true,
+  "disableScroll": true
 }

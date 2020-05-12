@@ -2,6 +2,11 @@
   "component": true,
   "usingComponents": {
     "take-photo": "../../components/take-photo/takePhoto",
-    "edit-photo": "../../components/edit-photo/editPhoto"
-  }
+    "image-cropper": "../../components/image-cropper/imageCropper",
+    "van-button": "vant-weapp/button/index",
+    "van-loading": "vant-weapp/loading/index",
+    "bottomAddtodo": "../../components/bottomAddtodo/bottomAddtodo",
+    "van-popup": "vant-weapp/popup/index"
+  },
+  "disableScroll": true
 }

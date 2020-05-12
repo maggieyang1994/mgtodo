@@ -36,6 +36,7 @@ Component({
   methods: {
     async imageOnload(e) {
       let res = await this.getElement(".imageWrapper");
+      wx.hideLoading();
       // 根据outer view 和 image view 算出比例
       let scale = adapterImage(res, e.detail);
       let tempObj = {
@@ -51,102 +52,19 @@ Component({
         movablePosotion: tempObj
       })
     },
-    getElement(selector) {
-      return new Promise((resolve, reject) => {
-        try {
-          const query = this.createSelectorQuery()
-          query.select(selector).boundingClientRect()
-          query.exec(res => {
-            const { width, height, left, top } = res[0]
-            resolve({ width, height, left, top })
-          })
-        } catch (e) {
-          reject(e)
-        }
-      })
-    },
-    dragStart(e) {
-      this.setData({
-        startPosition: {
-          startX: e.touches[0].pageX,
-          startY: e.touches[0].pageY
-        },
-        direction: e.target.dataset.type
-      })
-    },
-    async dragMove(e) {
-      let direction = this.data.direction;
-      let { pageX, pageY, clientX, clientY } = e.touches[0];
-      let { startX, startY } = this.data.startPosition;
-      let temp = this.data.temp;
-      let { left, width, height, top } = await this.getElement(".movableArea");
-      // 必须在区域内移动
-      if (this.data.startPosition && clientX >= left && clientX <= left + width && clientY >= top && clientY <= height + top) {
-        
-        if (direction.indexOf("top") !== -1) {
-          // 向下- 向上 +
-          let tempTop = startY - pageY;
-          // 如果往下 并且高度大于0的情况下 才能继续向下
-          if(tempTop >= 0 || (tempTop <=0 && this.data.movablePosotion.height + temp[0] - temp[2] >= 20)) temp[0] = tempTop
-        }
-        if (direction.indexOf("left") !== -1) {
-          // 向右-  向左 +
-          let tempLeft =startX - pageX;
-          if(tempLeft >= 0 || (tempLeft <=0 && this.data.movablePosotion.width + temp[1] - temp[3] > 20)) {
-            temp[1] = tempLeft;
-            console.log('tempLeft', tempLeft)
-            console.log('width', this.data.movablePosotion.width + temp[1] - temp[3])
-          }
-        }
-        if (direction.indexOf("bottom") !== -1) {
-          // 向下- 向上 +
-          let tempBottom  = startY - pageY
-          if(tempBottom <=0  || (tempBottom >=0 && this.data.movablePosotion.height + temp[0] - temp[2] >= 20)) temp[2] = tempBottom
-        }
-        if (direction.indexOf("right") !== -1) {
-          // 向右-  向左 +
-          let tempRight = startX - pageX;
-          if(tempRight <= 0 || (tempRight > 0 && this.data.movablePosotion.width + temp[1] - temp[3] >= 20))  temp[3] = tempRight
-        }
-        
-        // console.log('height', this.data.movablePosotion.height + temp[0] - temp[2])
-        this.setData({
-          temp
-        })
-      }
-
-
-    },
-    dragEnd(e) {
-      // 放开的时候记录当前位置
-      let { left, top, height, width } = this.data.movablePosotion;
-      let temp = this.data.temp
-      this.setData({
-        movablePosotion: {
-          left: left - temp[1],
-          top: top - temp[0],
-          width: width + temp[1] - temp[3],
-          height: height + temp[0] - temp[2]
-        },
-        temp: [0, 0, 0, 0]
-      })
-    },
-    onChange(e) {
-      // 如果是拖拽 e.detail.source = touches
-      if (!e.detail.source) return
-      const { x, y } = e.detail
-      this.setData({
-        movablePosotion: {
-          ...this.data.movablePosotion,
-          left: x,
-          top: y
-        }
-      })
-    },
     cut() {
       this.setData({
         showCut: true
       })
+      //获取到image-cropper对象
+      this.cropper = this.selectComponent("#image-cropper");
+      //开始裁剪
+      this.setData({
+        cropprSrc: "https://raw.githubusercontent.com/1977474741/image-cropper/dev/image/code.jpg",
+      });
+    },
+    cropperload() {
+      console.log("cropperload")
     },
     cancelCut() {
       this.setData({
@@ -155,31 +73,18 @@ Component({
       })
     },
     handleCut() {
-      let self = this;
-      let ctx = wx.createCanvasContext('canvas1', this);
-      // 等比例放大图片
-      // 不能画网络图片
-      wx.getImageInfo({
-        src: this.data.resultImg || this.data.sourceImg,
-        success: (res) => {
-          ctx.drawImage(res.path, this.data.movablePosotion.left / this.data.scale, this.data.movablePosotion.top / this.data.scale, this.data.movablePosotion.width / this.data.scale, this.data.movablePosotion.height / this.data.scale, 0, 0, this.data.movablePosotion.width / this.data.scale, this.data.movablePosotion.height / this.data.scale)
-          ctx.draw(false, () => {
-            wx.canvasToTempFilePath({
-              quality: 1,
-              canvasId: 'canvas1',
-              success(res) {
-                self.setData({
-                  resultImg: res.tempFilePath,
-                  showCut: false
-                })
-              },
-              fail(err) {
-                console.log(err)
-              }
-            }, this)
-          });
-        }
+      console.log(e.detail);
+      //点击裁剪框阅览图片
+      wx.previewImage({
+        current: e.detail.url, // 当前显示图片的http链接
+        urls: [e.detail.url] // 需要预览的图片http链接列表
       })
+    },
+    loadimage() {
+      console.log("图片加载完成", e.detail);
+      wx.hideLoading();
+      //重置图片角度、缩放、位置
+      this.cropper.imgReset();
     },
     async image2Text() {
       if (this.data.movablePosotion.width <= 15 || this.data.movablePosotion.height <= 15) {
@@ -208,8 +113,9 @@ Component({
         return;
       }
       adapter.image2Text(auth, imageData).then(res => {
+        console.log('res.......................', res)
         // 为什么必须要开通 本地调试才会有效果？？？？？  ---->还不是因为你没更新云端代码 因为开通了本地调试用的是本地代码  没开通用的云端代码 
-        if (res.result.error_code === 110) this.setData({ popMessage: '权限已经过期', showPop: true ,showLoading: false})
+        if (res.result.error_code === 110) this.setData({ popMessage: '权限已经过期', showPop: true, showLoading: false })
         else {
           this.setData({
             translatedText: res.result.words_result.map(x => x.words).join("\r\n"),
@@ -218,6 +124,7 @@ Component({
         }
 
       }).catch(e => {
+        console.log('e.......................', e)
         this.setData({ popMessage: e.message, showPop: true, showLoading: false })
       })
     },
@@ -245,7 +152,7 @@ Component({
         showPop: false
       })
     },
-    handleInput({detail}){
+    handleInput({ detail }) {
       console.log(detail)
       this.data.translatedText = detail.value
     }

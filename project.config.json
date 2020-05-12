@@ -21,7 +21,7 @@
 	},
 	"appid": "wxa69250eebe817c63",
 	"projectname": "mgtodo",
-	"libVersion": "2.7.3",
+	"libVersion": "2.7.0",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {
 		"qywx_simulator_plugin": "1.2.0"

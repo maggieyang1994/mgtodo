@@ -5,3 +5,122 @@
   width:100%;
   height:100%
 }
+/* components/editPhoto/editPhoto.wxss */
+.fullWidth{
+  width: 100%
+}
+.fullHeight{
+  height: 100%
+}
+.EditPhoto{
+  height:100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column
+}
+.movable{
+  border: 1rpx solid rgba(37,120,255, 0.6);
+  position:absolute;
+  left: 0;
+  top: 0;
+}
+.point-line{
+  width: 50rpx;
+  height: 50rpx;
+  border-color: rgba(37,120,255, 1);
+  position: absolute
+}
+.top{
+  top: 0;
+  
+}
+.bottom {
+  bottom: 0
+}
+.left {
+  left : 0
+}
+.right{
+  right: 0
+}
+.pl-left{
+  left: 50%;
+  transform: translateX(-50%)
+}
+
+.pl-top{
+  top: 50%;
+  transform: translateY(-50%)
+}
+.br-left{
+  border-left:6rpx solid;
+}
+.br-right{
+  border-right:6rpx solid;
+}
+
+.br-top{
+  border-top:6rpx solid;
+}
+.br-bottom{
+  border-bottom:6rpx solid;
+}
+
+.imageWrapper{
+  /* flex-grow: 1; */
+  /* margin: auto; */
+  width: 100%;
+  height: 40%;
+  display: flex;
+  justify-content: center;
+  padding:20rpx 0;
+  flex:1
+}
+.textWrapprer{
+  margin-top:20rpx;
+  height: 30%
+}
+.sourceImg{
+  display:block;
+  width:100%;
+  height: 100%
+}
+.cutting{
+  display:flex;
+  justify-content:space-around;
+  height: 10%;
+  z-index: 9999;
+  background-color: white;
+  padding:10px
+}
+.loading{
+  width:100%;
+  position:absolute;
+  height: 100%;
+  text-align: center;
+  background-color:black;
+  opacity: 0.3;
+  
+}
+.spinner{
+  position:absolute;
+  top:50%;
+  transform: translatey(-50%)
+}
+.translatedText{
+  width:97%;
+  min-height:100rpx;
+  border:1px solid black;
+  padding:10rpx
+}
+.translatedText .text{
+  flex-wrap: warp;
+ white-space: pre-wrap;
+}
+.bottomAddtodo{
+  width:100%
+}
+
+.vant .van-popup {
+  padding: 20px
+}

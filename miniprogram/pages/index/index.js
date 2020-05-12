@@ -4,11 +4,8 @@ import QuickTodo from '../../models/QuickTodo'
 import BaseTodo from '../../models/BaseTodo'
 import User from '../../models/User'
 import regeneratorRuntime from '../../utils/runtime'
-// import app from '../../app'
-// const Store = app.Store
-// const dispatch = Store.dispatch
-// const app = getApp();
-// let subscribeId;
+// import decrypto from '../../utils/decrypto.js'
+
 const getDefaultTodo = () => ({
   title: '',
   expireAt: null,

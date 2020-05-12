@@ -4,6 +4,7 @@
     "van-button": "vant-weapp/button/index",
     "van-loading": "vant-weapp/loading/index",
     "bottomAddtodo": "../../components/bottomAddtodo/bottomAddtodo",
-    "van-popup": "vant-weapp/popup/index"
+    "van-popup": "vant-weapp/popup/index",
+    "image-cropper": "../image-cropper/imageCropper"
   }
 }

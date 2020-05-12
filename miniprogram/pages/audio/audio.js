@@ -6,7 +6,32 @@ let appId = '5d5caf64';
 let recordManager = wx.getRecorderManager();
 let audioManager = wx.createInnerAudioContext();
 let fileManager = wx.getFileSystemManager()
-
+audioManager.onPlay(function () {
+  console.log("onPlay");
+  self.setData({
+    isPlaying: true
+  })
+})
+audioManager.onEnded(function () {
+  console.log("onEnded");
+  // 监听录音自动 结束
+  self.setData({
+    isPlaying: false
+  })
+})
+audioManager.onPause(function () {
+  console.log("onEnded");
+  // 监听录音自动 暂停
+  self.setData({
+    isPlaying: false
+  })
+})
+audioManager.onStop(function () {
+  console.log("stoped")
+  self.setData({
+    isPlaying: false
+  })
+})
 recordManager.onStart(async function () {
   console.log('start recording')
   // app.store.dispatch(showAudio(true));
@@ -20,11 +45,11 @@ recordManager.onStop(
   async function (res) {
     console.log('end recording')
     // app.store.dispatch(showAudio(false));
+    audioManager.src = res.tempFilePath
     self.setData({
       isRecording: false,
       isLastStoped: true,
       canPlayAudio: true,
-      audioPath: res.tempFilePath,
       showLoading: true
     });
     let [auth, err] = await getBaiduAuth('https://openapi.baidu.com/oauth/2.0/token', 'voice2TextToken', 'voice').then(res => [res, null]).catch(e => [null, e])
@@ -46,18 +71,19 @@ recordManager.onStop(
         fileSize: res.fileSize
       },
       success: function (res) {
-        res.result.err_msg === "success." ? self.setData({ translatedText: res.result.result.join("") }) :  self.setData({ popMessage: res.result.err_msg, showPop: true })
+        res.result.err_msg === "success." ? self.setData({ translatedText: res.result.result.join("") }) : self.setData({ popMessage: res.result.err_msg, showPop: true })
       },
       fail: function (err) {
-        self.setData({ popMessage: '转换失败',showPop: true })
+        self.setData({ popMessage: '转换失败', showPop: true })
       },
-      complete: function(){
+      complete: function () {
         self.setData({
           showLoading: false
         })
+
       }
     })
- 
+
 
   })
 Page({
@@ -67,11 +93,11 @@ Page({
     isLastStoped: true,
     isPress: false,
     canPlayAudio: false,
-    audioPath: '',
     translatedText: '',
     showLoading: false,
     popMessage: '',
-    showPop: false
+    showPop: false,
+    isPlaying: false
   },
   onLoad: function (options) {
     self = this
@@ -98,8 +124,7 @@ Page({
 
   },
   playAudio() {
-    audioManager.src = this.data.audioPath;
-    audioManager.play();
+    this.data.isPlaying ? audioManager.pause() : audioManager.play();
   },
   addTodo() {
     let todoObj = {
@@ -116,7 +141,7 @@ Page({
   cancelTodo() {
     wx.navigateTo({ url: "/pages/index/index" })
   },
-  onClose(){
+  onClose() {
     this.setData({
       showPop: false
     })

@@ -5,8 +5,9 @@
       <image src="../../assets/image/voice.png" class="photoImage" alt='语音添加' />
       <view>语音添加</view>
     </view>
-    <view class="pressTalk" bindtap="playAudio" wx:if="{{canPlayAudio}}">
-      <image src="../../assets/image/play.png" class="photoImage" />
+    <view class="pressTalk" wx:if="{{canPlayAudio}}" bindtap="playAudio">
+      <image src="../../assets/image/play.png" class="photoImage" wx:if="{{!isPlaying}}"/>
+      <image src="../../assets/image/pause.png" class="photoImage"  wx:if="{{isPlaying}}"/>
       <view>播放录音</view>
     </view>
   </view>
